@@ -3,11 +3,43 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { actionCreators } from '../store/WeatherForecasts';
+import { HubConnectionBuilder } from '@aspnet/signalr';
 
 class FetchData extends Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      nick: '',
+      message: '',
+      messages: [],
+      hubConnection: null,
+    };
+  }
+
   componentDidMount() {
     // This method is called when the component is first added to the document
     this.ensureDataFetched();
+
+    const nick = window.prompt('Your name:', 'John');
+
+    const hubConnection = new HubConnectionBuilder()
+      .withUrl("https://localhost:44371/game")
+      .build();
+  
+    this.setState({ hubConnection, nick }, () => {
+      this.state.hubConnection
+        .start()
+        .then(() => console.log('Connection started!'))
+        .catch(err => console.log('Error while establishing connection :('));
+
+      this.state.hubConnection.on('sendToAll', (nick, receivedMessage) => {
+        const text = `${nick}: ${receivedMessage}`;
+        const messages = this.state.messages.concat([text]);
+        console.log(text, messages);
+        this.setState({ messages });
+      });
+    });
   }
 
   componentDidUpdate() {
@@ -23,6 +55,22 @@ class FetchData extends Component {
   render() {
     return (
       <div>
+        <div>
+          <br />
+          <input
+            type="text"
+            value={this.state.message}
+            onChange={e => this.setState({ message: e.target.value })}
+          />
+
+          <button onClick={this.sendMessage}>Send</button>
+
+          <div>
+            {this.state.messages.map((message, index) => (
+              <span style={{display: 'block'}} key={index}> {message} </span>
+            ))}
+          </div>
+        </div>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
         {renderForecastsTable(this.props)}
@@ -30,6 +78,14 @@ class FetchData extends Component {
       </div>
     );
   }
+
+  sendMessage = () => {
+    this.state.hubConnection
+      .invoke('sendToAll', this.state.nick, this.state.message)
+      .catch(err => console.error(err));
+  
+      this.setState({message: ''});      
+  };
 }
 
 function renderForecastsTable(props) {

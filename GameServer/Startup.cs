@@ -30,6 +30,17 @@ namespace GameServer
 
             services.AddDbContext<PlayerContext>(opt => opt.UseInMemoryDatabase("PlayersList"));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+            {
+                builder
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins("https://localhost:44392");
+            }));
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +57,8 @@ namespace GameServer
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors("CorsPolicy");
+            app.UseSignalR(routes => routes.MapHub<GameHub>("/game"));
         }
     }
 }
