@@ -5,7 +5,11 @@ using System.Threading.Tasks;
 
 namespace GameServer.Models.Minions
 {
-    public class Lizzard
+    public class Lizard : Minion
     {
+        public override void Move()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

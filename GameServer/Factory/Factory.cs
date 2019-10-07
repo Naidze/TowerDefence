@@ -8,6 +8,6 @@ namespace GameServer.Factory
 {
     public abstract class Factory
     {
-        public abstract Minion GetMinion();
+        public abstract Minion CreateMinion(string type);
     }
 }
