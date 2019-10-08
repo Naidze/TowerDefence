@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GameServer.Models
 {
-    public class Tower
+    public abstract class Tower
     {
     }
 }
