@@ -8,7 +8,7 @@ namespace GameServer
 {
     public class Logger : ILogger
     {
-        private const string LOG_FILE = "";
+        private const string LOG_FILE = "logsassas.txt";
         private static Logger INSTANCE = null;
         private static object threadLock = new object();
         private static StreamWriter output;
@@ -30,10 +30,9 @@ namespace GameServer
             return INSTANCE;
         }
 
-        public void Log()
+        public void Log(string message)
         {
-            output.WriteLine("logger");
-            output.Close();
+            output.WriteLine(message);
         }
     }
 }

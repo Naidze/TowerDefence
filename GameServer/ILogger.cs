@@ -8,6 +8,6 @@ namespace GameServer
 {
     interface ILogger
     {
-        void Log();
+        void Log(string message);
     }
 }
