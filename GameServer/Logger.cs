@@ -9,22 +9,22 @@ namespace GameServer
     public class Logger : ILogger
     {
         private const string LOG_FILE = "";
-        private static Lazy<Logger> INSTANCE = null;
+        private static Logger INSTANCE = null;
         private static object threadLock = new object();
         private static StreamWriter output;
 
         private Logger()
         {
-            output = new StreamWriter(LOG_FILE);
+            output = new StreamWriter(LOG_FILE, true);
         }
 
-        public static Lazy<Logger> GetInstance()
+        public static Logger GetInstance()
         {
             lock (threadLock)
             {
                 if (INSTANCE == null)
                 {
-                    INSTANCE = new Lazy<Logger>();
+                    INSTANCE = new Logger();
                 }
             }
             return INSTANCE;
@@ -32,7 +32,8 @@ namespace GameServer
 
         public void Log()
         {
-            output.WriteLine();
+            output.WriteLine("logger");
+            output.Close();
         }
     }
 }
