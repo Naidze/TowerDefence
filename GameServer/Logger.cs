@@ -97,7 +97,7 @@ namespace GameServer
         {
             try
             {
-                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(logFilename, append, System.Text.Encoding.UTF8))
+                using (StreamWriter writer = new System.IO.StreamWriter(logFilename, append, System.Text.Encoding.UTF8))
                 {
                     if (!string.IsNullOrEmpty(text))
                     {

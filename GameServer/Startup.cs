@@ -17,6 +17,7 @@ namespace GameServer
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,7 +39,7 @@ namespace GameServer
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
-                .WithOrigins("https://localhost:44392");
+                .WithOrigins("https://localhost:5001");
             }));
             services.AddSignalR();
         }
