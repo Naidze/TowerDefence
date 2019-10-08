@@ -8,14 +8,23 @@ namespace GameServer
 {
     public class Logger : ILogger
     {
-        private const string LOG_FILE = "logsassas.txt";
         private static Logger INSTANCE = null;
         private static object threadLock = new object();
-        private static StreamWriter output;
+        private const string FILE_EXT = ".log";
+        private readonly string datetimeFormat;
+        private readonly string logFilename;
 
         private Logger()
         {
-            output = new StreamWriter(LOG_FILE, true);
+            datetimeFormat = "yyyy-MM-dd HH:mm:ss.fff";
+            logFilename = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name + FILE_EXT;
+
+            // Log file header line
+            string logHeader = logFilename + " is created.";
+            if (!System.IO.File.Exists(logFilename))
+            {
+                WriteLine(System.DateTime.Now.ToString(datetimeFormat) + " " + logHeader, false);
+            }
         }
 
         public static Logger GetInstance()
@@ -30,9 +39,118 @@ namespace GameServer
             return INSTANCE;
         }
 
-        public void Log(string message)
+        /// <summary>
+        /// Log a DEBUG message
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void Debug(string text)
         {
-            output.WriteLine(message);
+            WriteFormattedLog(LogLevel.DEBUG, text);
+        }
+
+        /// <summary>
+        /// Log an ERROR message
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void Error(string text)
+        {
+            WriteFormattedLog(LogLevel.ERROR, text);
+        }
+
+        /// <summary>
+        /// Log a FATAL ERROR message
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void Fatal(string text)
+        {
+            WriteFormattedLog(LogLevel.FATAL, text);
+        }
+
+        /// <summary>
+        /// Log an INFO message
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void Info(string text)
+        {
+            WriteFormattedLog(LogLevel.INFO, text);
+        }
+
+        /// <summary>
+        /// Log a TRACE message
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void Trace(string text)
+        {
+            WriteFormattedLog(LogLevel.TRACE, text);
+        }
+
+        /// <summary>
+        /// Log a WARNING message
+        /// </summary>
+        /// <param name="text">Message</param>
+        public void Warning(string text)
+        {
+            WriteFormattedLog(LogLevel.WARNING, text);
+        }
+
+        private void WriteLine(string text, bool append = true)
+        {
+            try
+            {
+                using (System.IO.StreamWriter writer = new System.IO.StreamWriter(logFilename, append, System.Text.Encoding.UTF8))
+                {
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        writer.WriteLine(text);
+                    }
+                }
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private void WriteFormattedLog(LogLevel level, string text)
+        {
+            string pretext;
+            switch (level)
+            {
+                case LogLevel.TRACE:
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [TRACE]   ";
+                    break;
+                case LogLevel.INFO:
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [INFO]    ";
+                    break;
+                case LogLevel.DEBUG:
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [DEBUG]   ";
+                    break;
+                case LogLevel.WARNING:
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [WARNING] ";
+                    break;
+                case LogLevel.ERROR:
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [ERROR]   ";
+                    break;
+                case LogLevel.FATAL:
+                    pretext = System.DateTime.Now.ToString(datetimeFormat) + " [FATAL]   ";
+                    break;
+                default:
+                    pretext = "";
+                    break;
+            }
+
+            WriteLine(pretext + text);
+        }
+
+        [System.Flags]
+        private enum LogLevel
+        {
+            TRACE,
+            INFO,
+            DEBUG,
+            WARNING,
+            ERROR,
+            FATAL
         }
     }
 }
