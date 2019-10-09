@@ -7,6 +7,11 @@ namespace GameServer.Models.Minions
 {
     public class Noob : Minion
     {
+        public Noob() : base()
+        {
+            Console.WriteLine("Hi, I'm Noob!");
+        }
+
         public override void Move()
         {
             throw new NotImplementedException();

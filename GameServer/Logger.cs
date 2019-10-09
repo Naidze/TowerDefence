@@ -9,7 +9,7 @@ namespace GameServer
     public class Logger : ILogger
     {
         private static Logger INSTANCE = null;
-        private static object threadLock = new object();
+        private static readonly object threadLock = new object();
         private const string FILE_EXT = ".log";
         private readonly string datetimeFormat;
         private readonly string logFilename;

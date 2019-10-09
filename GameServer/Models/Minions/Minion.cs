@@ -9,6 +9,7 @@ namespace GameServer.Models.Minions
     {
         public Minion()
         {
+            Console.WriteLine("Minion created.");
         }
 
         public abstract void Move();

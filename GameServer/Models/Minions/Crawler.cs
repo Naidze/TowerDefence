@@ -7,6 +7,11 @@ namespace GameServer.Models.Minions
 {
     public class Crawler : Minion
     {
+        public Crawler() : base()
+        {
+            Console.WriteLine("Hi, I'm Crawler!");
+        }
+
         public override void Move()
         {
             throw new NotImplementedException();
