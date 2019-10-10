@@ -8,7 +8,8 @@ export class Game extends Component {
 
     this.state = {
         hubConnection: null,
-        name: ''
+        name: '',
+        started: false,
       }
   }
 
@@ -20,7 +21,7 @@ export class Game extends Component {
     }
 
     const hubConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:62988/game")
+      .withUrl("http://localhost:62984/game")
       .build();
 
     this.setState({ hubConnection, name }, () => {
@@ -42,7 +43,7 @@ export class Game extends Component {
         });
 
         this.state.hubConnection.on('gameStarting', () => {
-            console.log('game is starting')
+            this.setState({ started: true });
           });
       });
   }
@@ -50,7 +51,13 @@ export class Game extends Component {
   render () {
     return (
       <div>
-        <h1 className="mb-3">Waiting for players...</h1>
+        <h1 className="mb-3">{this.state.started ? 'Game in progress' : 'Waiting for players...'}</h1>
+        <div className="canvases">
+          <canvas id="playerCanvas" width="600" height="400" style={{border: '1px solid #000000'}}>
+          </canvas>
+          <canvas id="opponentCanvas" width="600" height="400" style={{border: '1px solid #000000'}}>
+          </canvas>
+        </div>
       </div>
     );
   }

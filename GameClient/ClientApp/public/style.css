@@ -1,0 +1,4 @@
+.canvases {
+    display: flex;
+    background: url('images/map.png');
+}
