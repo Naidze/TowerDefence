@@ -10,7 +10,16 @@ namespace GameServer
     public class Game
     {
 
-        private readonly static Lazy<Game> _instance = new Lazy<Game>(() => new Game());
+        private IHubContext<GameHub> _hub
+        {
+            get;
+            set;
+        }
+
+        public Game(IHubContext<GameHub> hub)
+        {
+            _hub = hub;
+        }
 
         private Player player1;
         private Player player2;
@@ -64,14 +73,6 @@ namespace GameServer
         {
             Logger.GetInstance().Info("Game is starting!");
             //GameHub.Clients.All.SendAsync("gameStarting");
-        }
-
-        public static Game Instance
-        {
-            get
-            {
-                return _instance.Value;
-            }
         }
 
     }

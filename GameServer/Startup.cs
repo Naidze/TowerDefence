@@ -41,7 +41,9 @@ namespace GameServer
                 .AllowCredentials()
                 .WithOrigins("https://localhost:5001");
             }));
-            services.AddSignalR();
+            services.AddSignalR().AddMessagePackProtocol();
+
+            services.AddSingleton<GameHub>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,7 +61,10 @@ namespace GameServer
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseCors("CorsPolicy");
-            app.UseSignalR(routes => routes.MapHub<GameHub>("/game"));
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<GameHub>("/game");
+            });
         }
     }
 }

@@ -9,22 +9,22 @@ namespace GameServer
     public class GameHub : Hub
     {
 
-        private Game game;
+        private readonly Game _game;
 
-        public GameHub()
+        public GameHub(Game game)
         {
-            game = Game.Instance;
+            _game = game;
         }
 
         public override Task OnConnectedAsync()
         {
-            game.AddPlayer(Context.ConnectionId);
+            _game.AddPlayer(Context.ConnectionId);
             return base.OnConnectedAsync();
         }
 
         public override Task OnDisconnectedAsync(Exception exception)
         {
-            game.RemovePlayer(Context.ConnectionId);
+            _game.RemovePlayer(Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
 
@@ -35,7 +35,7 @@ namespace GameServer
 
         public void ChangeName(string name)
         {
-            game.ChangeName(Context.ConnectionId, name);
+            _game.ChangeName(Context.ConnectionId, name);
         }
 
 
