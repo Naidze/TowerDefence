@@ -20,7 +20,7 @@ export class Game extends Component {
     }
 
     const hubConnection = new HubConnectionBuilder()
-      .withUrl("https://localhost:44371/game")
+      .withUrl("http://localhost:62988/game")
       .build();
 
     this.setState({ hubConnection, name }, () => {
