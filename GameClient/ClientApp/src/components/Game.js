@@ -10,6 +10,7 @@ export class Game extends Component {
         hubConnection: null,
         name: '',
         started: false,
+        countdown: 10,
       }
   }
 
@@ -43,21 +44,38 @@ export class Game extends Component {
         });
 
         this.state.hubConnection.on('gameStarting', () => {
-            this.setState({ started: true });
+            this.startGame();
           });
       });
+  }
+
+  startGame() {
+    this.setState({ started: true });
+    const cd = setInterval(() => {
+      this.setState({ countdown: this.state.countdown - 1 });
+      if (this.state.countdown === 0) {
+        this.state.hubConnection
+                .invoke('startWave', 1)
+                .catch(err => console.error(err));
+        clearInterval(cd);
+      }
+    }, 1000);
   }
 
   render () {
     return (
       <div>
-        <h1 className="mb-3">{this.state.started ? 'Game in progress' : 'Waiting for players...'}</h1>
-        <div className="canvases">
-          <canvas id="playerCanvas" width="600" height="400" style={{border: '1px solid #000000'}}>
-          </canvas>
-          <canvas id="opponentCanvas" width="600" height="400" style={{border: '1px solid #000000'}}>
-          </canvas>
-        </div>
+        <h1 className="mb-3">{this.state.started ? (this.state.countdown > 0 ? `Game starts in ${this.state.countdown}` : 'Game in progress') : 'Waiting for players...'}</h1>
+        {this.state.started &&
+          <div>
+            <div className="canvases">
+              <canvas id="playerCanvas" width="600" height="400" style={{border: '1px solid #000000'}}>
+              </canvas>
+              <canvas id="opponentCanvas" width="600" height="400" style={{border: '1px solid #000000'}}>
+              </canvas>
+            </div>
+          </div>
+        }
       </div>
     );
   }

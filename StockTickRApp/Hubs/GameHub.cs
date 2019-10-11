@@ -36,5 +36,11 @@ namespace TDServer.Hubs
         {
             _game.ChangeName(Context.ConnectionId, name);
         }
+
+        public void StartWave(int wave)
+        {
+            int a = 4;
+        }
+
     }
 }
