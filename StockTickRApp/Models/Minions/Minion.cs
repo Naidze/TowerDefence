@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TDServer.Enums;
@@ -14,7 +15,8 @@ namespace TDServer.Models.Minions
 
         public Minion()
         {
-            Console.WriteLine("Minion created.");
+            Health = 100;
+            Debug.WriteLine("Minion created.");
         }
 
         public abstract void Move();

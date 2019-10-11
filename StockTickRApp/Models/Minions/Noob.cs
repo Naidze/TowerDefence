@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace TDServer.Models.Minions
     {
         public Noob() : base()
         {
-            Console.WriteLine("Hi, I'm Noob!");
+            Debug.WriteLine("Hi, I'm Noob!");
         }
 
         public override void Move()
