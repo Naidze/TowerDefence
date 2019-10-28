@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using TDServer.Hubs;
 using TDServer.Models;
 using Microsoft.AspNetCore.SignalR;
+using TDServer.Models.Minions;
+using TDServer.Factory;
 
 namespace TDServer
 {
@@ -25,8 +27,14 @@ namespace TDServer
             set;
         }
 
+        private MinionFactory minionFactory;
+
         private Player player1;
         private Player player2;
+        private int wave = 0;
+        private Timer minionSpawnTimer;
+        private int minionsSpawned = 0;
+        private List<Minion> minions = new List<Minion>();
 
         public void AddPlayer(string connectionId)
         {
@@ -77,8 +85,34 @@ namespace TDServer
 
         public void StartGame()
         {
+            minionFactory = new MinionFactory();
             Logger.GetInstance().Info("Game is starting!");
             Hub.Clients.All.SendAsync("gameStarting");
+            StartWave();
+        }
+
+        public void StartWave()
+        {
+            wave++;
+            minionSpawnTimer = new System.Threading.Timer(
+                e => SpawnMinion(),
+                null,
+                TimeSpan.Zero,
+            TimeSpan.FromSeconds(1));
+        }
+
+        private void SpawnMinion()
+        {
+            minionsSpawned++;
+            if (minionsSpawned > 10)
+            {
+                minionSpawnTimer.Dispose();
+                return;
+            }
+
+            var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
+            minions.Add(minion);
+            Hub.Clients.All.SendAsync("spawnMinion", Enums.MinionType.NOOB.ToString());
         }
 
     }
