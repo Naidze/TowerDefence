@@ -112,7 +112,7 @@ namespace TDServer
 
             var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
             minions.Add(minion);
-            Hub.Clients.All.SendAsync("spawnMinion", Enums.MinionType.NOOB.ToString());
+            Hub.Clients.All.SendAsync("spawnMinion", minion.Id, Enums.MinionType.NOOB.ToString());
         }
 
     }

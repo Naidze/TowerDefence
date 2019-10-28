@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
-import { spawn } from '../minions/MinionSpawner';
+import MinionHandler from '../minions/MinionHandler';
 
 export class Game extends Component {
+
+  minionHandler = undefined;
 
   constructor(props) {
     super(props);
@@ -46,10 +48,11 @@ export class Game extends Component {
 
       this.state.hubConnection.on('gameStarting', () => {
         this.startGame();
+        this.minionHandler = new MinionHandler(document.getElementById('playerCanvas'));
       });
 
-      this.state.hubConnection.on('spawnMinion', (type) => {
-        spawn(document.getElementById('playerCanvas'), type);
+      this.state.hubConnection.on('spawnMinion', (id, type) => {
+        this.minionHandler.spawn(id, type);
       });
     });
   }
