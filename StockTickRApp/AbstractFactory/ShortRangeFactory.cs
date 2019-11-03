@@ -8,19 +8,19 @@ namespace TDServer.AbstractFactory
 {
     public class ShortRangeFactory : TowerFactory
     {
-        public override LongRangeGroundTower CreateGroundTower()
+        public override LongRangeGroundTower CreateGroundTower(int x, int y)
         {
-            return new LongRangeGroundTower();
+            return new LongRangeGroundTower(x, y);
         }
 
-        public override LongRangeSkyTower CreateSkyTower()
+        public override LongRangeSkyTower CreateSkyTower(int x, int y)
         {
-            return new LongRangeSkyTower();
+            return new LongRangeSkyTower(x, y);
         }
 
-        public override LongRangeUniversalTower CreateUniversalTower()
+        public override LongRangeUniversalTower CreateUniversalTower(int x, int y)
         {
-            return new LongRangeUniversalTower();
+            return new LongRangeUniversalTower(x, y);
         }
     }
 }

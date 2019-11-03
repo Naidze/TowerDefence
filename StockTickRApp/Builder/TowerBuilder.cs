@@ -34,6 +34,12 @@ namespace TDServer.Builder
             return this;
         }
 
+        public TowerBuilder SetPosition(Position position)
+        {
+            _tower.Position = position;
+            return this;
+        }
+
         public Tower GetResult()
         {
             return _tower;

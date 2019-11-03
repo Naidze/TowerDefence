@@ -32,5 +32,10 @@ namespace TDServer.Hubs
             _game.ChangeName(Context.ConnectionId, name);
         }
 
+        public void PlaceTower(string name, string towerName, int x, int y)
+        {
+            _game.PlaceTower(name, towerName, x, y);
+        }
+
     }
 }

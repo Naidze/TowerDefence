@@ -6,6 +6,9 @@ import TowerHandler from '../TowerHandler';
 
 export class Game extends Component {
 
+  halfTowerHeight = 17.5;
+  halfTowerWidth = 20;
+
   playerCanvas = undefined;
   playerContext = undefined;
   opponentCanvas = undefined;
@@ -35,6 +38,7 @@ export class Game extends Component {
     this.selectTower = this.selectTower.bind(this);
     this.handleCanvasMouseMove = this.handleCanvasMouseMove.bind(this);
     this.handleCanvasMouseLeave = this.handleCanvasMouseLeave.bind(this);
+    this.handleCanvasClick = this.handleCanvasClick.bind(this);
   }
 
   componentDidMount() {
@@ -101,6 +105,7 @@ export class Game extends Component {
   handleState(canvas, context, state) {
     context.clearRect(0, 0, canvas.width, canvas.height);
     this.minionHandler.render(context, state.minions);
+    this.towerHandler.render(context, state.towers);
   }
 
   selectTower(selectedTower) {
@@ -108,6 +113,14 @@ export class Game extends Component {
       this.setState({ selectedTower: undefined });
     } else {
       this.setState({ selectedTower });
+    }
+  }
+
+  handleCanvasClick(event) {
+    if (this.state.selectedTower) {
+      this.state.hubConnection
+        .invoke('placeTower', this.state.name, 'archery_range', this.state.mouseX - this.halfTowerWidth, this.state.mouseY - this.halfTowerHeight)
+        .catch(err => console.error(err));
     }
   }
 
@@ -131,7 +144,7 @@ export class Game extends Component {
             <div className="canvases">
               <div className="PlayerSpace">
                 <p>{this.state.player.health}❤️</p>
-                <canvas onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
+                <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
                   <div className="PlayerSpace__GameMenu__Tower">
                     <img onClick={() => this.selectTower('archer')} src={process.env.PUBLIC_URL + "/images/towers/archery_range.png"} alt="" />

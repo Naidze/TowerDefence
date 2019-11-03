@@ -7,5 +7,11 @@ namespace TDServer.Models.Towers
 {
     public class ShortRangeUniversalTower : Tower
     {
+
+        public ShortRangeUniversalTower(int x, int y) : base(x, y)
+        {
+
+        }
+
     }
 }

@@ -7,5 +7,11 @@ namespace TDServer.Models.Towers
 {
     public class LongRangeUniversalTower : Tower
     {
+
+        public LongRangeUniversalTower(int x, int y) : base(x, y)
+        {
+
+        }
+
     }
 }

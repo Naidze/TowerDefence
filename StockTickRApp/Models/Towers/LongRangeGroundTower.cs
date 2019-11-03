@@ -7,7 +7,7 @@ namespace TDServer.Models.Towers
 {
     public class LongRangeGroundTower : Tower
     {
-        public LongRangeGroundTower() : base()
+        public LongRangeGroundTower(int x, int y) : base(x, y)
         {
         }
     }

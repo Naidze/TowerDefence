@@ -10,6 +10,7 @@ using TDServer.Models;
 using Microsoft.AspNetCore.SignalR;
 using TDServer.Models.Minions;
 using TDServer.Factory;
+using TDServer.AbstractFactory;
 
 namespace TDServer
 {
@@ -165,6 +166,30 @@ namespace TDServer
                     players[i].Minions.Add(minion);
                 }
             }
+        }
+
+        public void PlaceTower(string name, string towerName, int x, int y)
+        {
+            Player player = GetPlayer(name);
+            if (player == null)
+            {
+                return;
+            }
+
+            ShortRangeFactory factory = new ShortRangeFactory();
+            player.Towers.Add(factory.CreateUniversalTower(x, y));
+        }
+
+        private Player GetPlayer(string name)
+        {
+            for (int i = 0; i < PLAYER_COUNT; i++)
+            {
+                if (players[i].Name == name)
+                {
+                    return players[i];
+                }
+            }
+            return null;
         }
 
     }

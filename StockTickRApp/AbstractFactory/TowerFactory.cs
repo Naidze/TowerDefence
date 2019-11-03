@@ -10,8 +10,8 @@ namespace TDServer.AbstractFactory
     {
         public TowerFactory() { }
 
-        public abstract LongRangeGroundTower CreateGroundTower();
-        public abstract LongRangeSkyTower CreateSkyTower();
-        public abstract LongRangeUniversalTower CreateUniversalTower();
+        public abstract LongRangeGroundTower CreateGroundTower(int x, int y);
+        public abstract LongRangeSkyTower CreateSkyTower(int x, int y);
+        public abstract LongRangeUniversalTower CreateUniversalTower(int x, int y);
     }
 }

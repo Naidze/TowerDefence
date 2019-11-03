@@ -16,5 +16,10 @@ namespace TDServer.Models.Towers
         public Tower()
         {
         }
+
+        public Tower(int x, int y)
+        {
+            Position = new Position(x, y);
+        }
     }
 }
