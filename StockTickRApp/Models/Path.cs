@@ -5,24 +5,16 @@ using System.Threading.Tasks;
 
 namespace TDServer.Models
 {
-    public class Position
+    public class Path
     {
+
         public int X { get; set; }
         public int Y { get; set; }
-        public int Path { get; set; }
 
-        public Position()
-        {
-            X = 0;
-            Y = 0;
-            Path = 0;
-        }
-
-        public Position(int x, int y)
+        public Path(int x, int y)
         {
             X = x;
             Y = y;
-            Path = 0;
         }
 
     }

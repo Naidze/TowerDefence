@@ -24,9 +24,8 @@ namespace TDServer.Models.Minions
             Id = idCounter++;
             Name = name;
             Health = 100;
-            MoveSpeed = 1;
-            Position = new Position();
-            Debug.WriteLine("Minion created.");
+            MoveSpeed = 5;
+            Position = new Position(Game.map[0].X, Game.map[0].Y);
         }
 
         public abstract void Move();

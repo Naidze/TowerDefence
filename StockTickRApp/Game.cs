@@ -16,7 +16,21 @@ namespace TDServer
     public class Game
     {
 
+        public static readonly Path[] map = new Path[] {
+            new Path(-20, 185),
+            new Path(70, 185),
+            new Path(70, 68),
+            new Path(188, 68),
+            new Path(188, 228),
+            new Path(350, 228),
+            new Path(350, 147),
+            new Path(550, 147)
+        };
+
         private const int PLAYER_COUNT = 2;
+        private const int TICK_INTERVAL = 100;
+        // INTERVAL BETWEEN WAVES IN MS
+        private const int WAVE_INTERVAL = 1000;
 
         public Game(IHubContext<GameHub> hub)
         {
@@ -34,8 +48,7 @@ namespace TDServer
         private Player[] players = new Player[PLAYER_COUNT];
         private int wave = 0;
         private Timer gameLoop;
-        private Timer minionSpawnTimer;
-        private int minionsSpawned = 0;
+        private int leftToSpawn = 0;
 
         public void AddPlayer(string connectionId)
         {
@@ -99,18 +112,31 @@ namespace TDServer
             minionFactory = new MinionFactory();
             Logger.GetInstance().Info("Game is starting!");
             Hub.Clients.All.SendAsync("gameStarting");
-            StartWave();
             gameLoop = new System.Threading.Timer(
                 e => Tick(),
                 null,
                 TimeSpan.Zero,
-            TimeSpan.FromMilliseconds(1000));
+            TimeSpan.FromMilliseconds(TICK_INTERVAL));
         }
 
         private void Tick()
         {
+            if (leftToSpawn == 0)
+            {
+                leftToSpawn = -1;
+                Task.Factory.StartNew(() =>
+                {
+                    Thread.Sleep(WAVE_INTERVAL);
+                    wave++;
+                    leftToSpawn = 5 + (wave * 3);
+                });
+            } else if (leftToSpawn > 0)
+            {
+                SpawnMinion();
+            }
+
             MoveMinions();
-            Hub.Clients.All.SendAsync("tick", players);
+            Hub.Clients.All.SendAsync("tick", wave, players);
         }
 
         private void MoveMinions()
@@ -124,31 +150,14 @@ namespace TDServer
             }
         }
 
-        public void StartWave()
-        {
-            wave++;
-            minionSpawnTimer = new System.Threading.Timer(
-                e => SpawnMinion(),
-                null,
-                TimeSpan.Zero,
-            TimeSpan.FromSeconds(1));
-        }
-
         private void SpawnMinion()
         {
-            minionsSpawned++;
-            if (minionsSpawned > 10)
-            {
-                minionSpawnTimer.Dispose();
-                return;
-            }
-
             var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
+            leftToSpawn--;
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
                 players[i].Minions.Add(minion);
             }
-            Hub.Clients.All.SendAsync("spawnMinion", minion.Id, Enums.MinionType.NOOB.ToString());
         }
 
     }
