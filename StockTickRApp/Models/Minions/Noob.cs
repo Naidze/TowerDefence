@@ -8,14 +8,14 @@ namespace TDServer.Models.Minions
 {
     public class Noob : Minion
     {
-        public Noob() : base()
+        public Noob() : base("noob")
         {
             Debug.WriteLine("Hi, I'm Noob!");
         }
 
         public override void Move()
         {
-            throw new NotImplementedException();
+            Position.X += MoveSpeed;
         }
     }
 }

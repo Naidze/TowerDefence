@@ -7,7 +7,7 @@ namespace TDServer.Models.Towers
 {
     public class Tower
     {
-        public Coordinates Position { get; set; }
+        public Position Position { get; set; }
         public int Cost { get; set; }
         public int Range { get; set; }
         public int Damage { get; set; }

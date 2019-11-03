@@ -27,11 +27,6 @@ namespace TDServer.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
-        public void SendToAll(string name, string message)
-        {
-            Clients.All.SendAsync("sendToAll", name, message);
-        }
-
         public void ChangeName(string name)
         {
             _game.ChangeName(Context.ConnectionId, name);

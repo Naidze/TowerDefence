@@ -1,7 +1,8 @@
 export default class Minion {
 
-    constructor(id, x, y, type, hp) {
+    constructor(id, image, x, y, type, hp) {
         this.id = id;
+        this.image = image;
         this.x = x;
         this.y = y;
         this.type = type;

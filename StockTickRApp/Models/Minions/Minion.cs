@@ -13,14 +13,19 @@ namespace TDServer.Models.Minions
         private static int idCounter = 0;
 
         public int Id { get; set; }
+        public string Name { get; set; }
         public int Health { get; set; }
-        public float MoveSpeed { get; set; }
+        public int MoveSpeed { get; set; }
         public MoveType MoveType { get; set; }
+        public Position Position { get; set; }
 
-        public Minion()
+        public Minion(string name)
         {
             Id = idCounter++;
+            Name = name;
             Health = 100;
+            MoveSpeed = 1;
+            Position = new Position();
             Debug.WriteLine("Minion created.");
         }
 

@@ -16,6 +16,8 @@ namespace TDServer
     public class Game
     {
 
+        private const int PLAYER_COUNT = 2;
+
         public Game(IHubContext<GameHub> hub)
         {
             Hub = hub;
@@ -29,57 +31,66 @@ namespace TDServer
 
         private MinionFactory minionFactory;
 
-        private Player player1;
-        private Player player2;
+        private Player[] players = new Player[PLAYER_COUNT];
         private int wave = 0;
+        private Timer gameLoop;
         private Timer minionSpawnTimer;
         private int minionsSpawned = 0;
-        private List<Minion> minions = new List<Minion>();
 
         public void AddPlayer(string connectionId)
         {
-            if (player1 == null)
+            for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                player1 = new Player(connectionId);
-                Logger.GetInstance().Info("Player one has joined, id: " + connectionId);
-            }
-            else if (player2 == null)
-            {
-                player2 = new Player(connectionId);
-                Logger.GetInstance().Info("Player two has joined, id: " + connectionId);
+                if (players[i] == null)
+                {
+                    players[i] = new Player(connectionId);
+                    Logger.GetInstance().Info("Player " + (i + 1) + " has joined, id: " + connectionId);
+                    break;
+                }
             }
 
-            if (player1 != null && player2 != null)
+            if (ReadyToStart())
             {
                 StartGame();
+
             }
+        }
+
+        private bool ReadyToStart()
+        {
+            for (int i = 0; i < PLAYER_COUNT; i++)
+            {
+                if (players[i] == null)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public void RemovePlayer(string connectionId)
         {
-            if (player1 != null && player1.Id == connectionId)
+            for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                player1 = null;
-                Logger.GetInstance().Info("Player one has left, id: " + connectionId);
-            }
-            else if (player2 != null && player2.Id == connectionId)
-            {
-                player2 = null;
-                Logger.GetInstance().Info("Player two has left, id: " + connectionId);
+                if (players[i] != null && players[i].Id == connectionId)
+                {
+                    players[i] = null;
+                    Logger.GetInstance().Info("Player " + (i + 1) + " has left, id: " + connectionId);
+                    break;
+                }
             }
         }
 
         public void ChangeName(string connectionId, string name)
         {
-            if (player1 != null && player1.Id == connectionId)
+            for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                player1.Name = name;
-                Logger.GetInstance().Info("Set player one name to: " + name);
-            }
-            else if (player2 != null && player2.Id == connectionId)
-            {
-                player2.Name = name;
-                Logger.GetInstance().Info("Set player two name to: " + name);
+                if (players[i] != null && players[i].Id == connectionId)
+                {
+                    players[i].Name = name;
+                    Logger.GetInstance().Info("Set player " + (i + 1) + " name to: " + name);
+                    break;
+                }
             }
         }
 
@@ -89,6 +100,28 @@ namespace TDServer
             Logger.GetInstance().Info("Game is starting!");
             Hub.Clients.All.SendAsync("gameStarting");
             StartWave();
+            gameLoop = new System.Threading.Timer(
+                e => Tick(),
+                null,
+                TimeSpan.Zero,
+            TimeSpan.FromMilliseconds(1000));
+        }
+
+        private void Tick()
+        {
+            MoveMinions();
+            Hub.Clients.All.SendAsync("tick", players);
+        }
+
+        private void MoveMinions()
+        {
+            for (int i = 0; i < PLAYER_COUNT; i++)
+            {
+                foreach (var minion in players[i].Minions)
+                {
+                    minion.Move();
+                }
+            }
         }
 
         public void StartWave()
@@ -111,7 +144,10 @@ namespace TDServer
             }
 
             var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
-            minions.Add(minion);
+            for (int i = 0; i < PLAYER_COUNT; i++)
+            {
+                players[i].Minions.Add(minion);
+            }
             Hub.Clients.All.SendAsync("spawnMinion", minion.Id, Enums.MinionType.NOOB.ToString());
         }
 

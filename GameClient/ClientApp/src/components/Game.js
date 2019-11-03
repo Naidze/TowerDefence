@@ -39,26 +39,22 @@ export class Game extends Component {
         })
         .catch(err => console.log('Error while establishing connection :('));
 
-      this.state.hubConnection.on('sendToAll', (nick, receivedMessage) => {
-        const text = `${nick}: ${receivedMessage}`;
-        const messages = this.state.messages.concat([text]);
-        console.log(text, messages);
-        this.setState({ messages });
-      });
-
       this.state.hubConnection.on('gameStarting', () => {
-        this.startGame();
-        this.minionHandler = new MinionHandler(document.getElementById('playerCanvas'));
+        this.setState({ started: true }, () => this.startGame());
       });
 
       this.state.hubConnection.on('spawnMinion', (id, type) => {
         this.minionHandler.spawn(id, type);
       });
+
+      this.state.hubConnection.on('tick', (wut) => {
+        console.log(wut)
+      });
     });
   }
 
   startGame() {
-    this.setState({ started: true });
+    this.minionHandler = new MinionHandler(document.getElementById('playerCanvas'));
   }
 
   render() {

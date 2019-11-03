@@ -11,7 +11,7 @@ namespace TDServer.Builder
     {
         private readonly Tower _tower = new Tower();
 
-        public TowerBuilder(Coordinates Position)
+        public TowerBuilder(Position Position)
         {
             _tower.Position = Position;
         }

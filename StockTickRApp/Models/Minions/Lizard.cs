@@ -8,7 +8,7 @@ namespace TDServer.Models.Minions
 {
     public class Lizard : Minion
     {
-        public Lizard() : base()
+        public Lizard() : base("crawler")
         {
             Debug.WriteLine("Hi, I'm Lizard!");
         }
