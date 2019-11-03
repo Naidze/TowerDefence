@@ -10,7 +10,6 @@ export default class MinionHandler {
     render(context, minions) {
         minions.forEach(minion => {
             this.spawn(context, minion);
-            console.log(minion);
         });
     }
 

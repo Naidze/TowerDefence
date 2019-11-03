@@ -18,8 +18,8 @@ namespace TDServer
 
         public static readonly Path[] map = new Path[] {
             new Path(-20, 185),
-            new Path(70, 185),
-            new Path(70, 68),
+            new Path(68, 185),
+            new Path(68, 68),
             new Path(188, 68),
             new Path(188, 228),
             new Path(350, 228),
@@ -28,7 +28,7 @@ namespace TDServer
         };
 
         private const int PLAYER_COUNT = 2;
-        private const int TICK_INTERVAL = 100;
+        private const int TICK_INTERVAL = 10;
         // INTERVAL BETWEEN WAVES IN MS
         private const int WAVE_INTERVAL = 1000;
 
@@ -65,7 +65,6 @@ namespace TDServer
             if (ReadyToStart())
             {
                 StartGame();
-
             }
         }
 
@@ -143,9 +142,14 @@ namespace TDServer
         {
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                foreach (var minion in players[i].Minions)
+                for (int j = players[i].Minions.Count - 1; j >= 0; j--)
                 {
-                    minion.Move();
+                    var minion = players[i].Minions[j];
+                    if (!minion.Move())
+                    {
+                        players[i].Minions.RemoveAt(j);
+                        players[i].Health--;
+                    }
                 }
             }
         }
@@ -156,7 +160,10 @@ namespace TDServer
             leftToSpawn--;
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                players[i].Minions.Add(minion);
+                if (players[i].Health > 0)
+                {
+                    players[i].Minions.Add(minion);
+                }
             }
         }
 

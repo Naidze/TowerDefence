@@ -13,9 +13,5 @@ namespace TDServer.Models.Minions
             Debug.WriteLine("Hi, I'm Crawler!");
         }
 
-        public override void Move()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
