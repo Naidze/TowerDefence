@@ -20,6 +20,10 @@ canvas {
     align-items: center;
 }
 
+.PlayerSpace__GameMenu__Tower {
+    margin-left: 12px;
+}
+
 .PlayerSpace__GameMenu__Tower img {
     cursor: pointer;
 }

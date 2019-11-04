@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SignalR;
 using TDServer.Models.Minions;
 using TDServer.Factory;
 using TDServer.AbstractFactory;
+using TDServer.Models.Towers;
 
 namespace TDServer
 {
@@ -29,9 +30,12 @@ namespace TDServer
         };
 
         private const int PLAYER_COUNT = 2;
+
         private const int TICK_INTERVAL = 10;
-        // INTERVAL BETWEEN WAVES IN MS
         private const int WAVE_INTERVAL = 1000;
+
+        private const int SPAWN_EVERY_X_TICK = 10;
+        private const int SHOOT_EVERY_X_TICK = 50;
 
         public Game(IHubContext<GameHub> hub)
         {
@@ -50,6 +54,7 @@ namespace TDServer
         private int wave = 0;
         private Timer gameLoop;
         private int leftToSpawn = 0;
+        private int ticksBeforeSpawn = 0;
 
         public void AddPlayer(string connectionId)
         {
@@ -107,6 +112,18 @@ namespace TDServer
             }
         }
 
+        public void PlaceTower(string name, string towerName, int x, int y)
+        {
+            Player player = GetPlayer(name);
+            if (player == null)
+            {
+                return;
+            }
+
+            ShortRangeFactory factory = new ShortRangeFactory();
+            player.Towers.Add(factory.CreateUniversalTower(x, y));
+        }
+
         public void StartGame()
         {
             minionFactory = new MinionFactory();
@@ -121,6 +138,14 @@ namespace TDServer
 
         private void Tick()
         {
+            SpawnMinions();
+            MoveMinions();
+            FireTowers();
+            Hub.Clients.All.SendAsync("tick", wave, players);
+        }
+
+        private void SpawnMinions()
+        {
             if (leftToSpawn == 0)
             {
                 leftToSpawn = -1;
@@ -130,13 +155,26 @@ namespace TDServer
                     wave++;
                     leftToSpawn = 5 + (wave * 3);
                 });
-            } else if (leftToSpawn > 0)
+            }
+            else if (leftToSpawn > 0 && ticksBeforeSpawn-- == 0)
             {
                 SpawnMinion();
+                ticksBeforeSpawn = SPAWN_EVERY_X_TICK;
             }
+        }
 
-            MoveMinions();
-            Hub.Clients.All.SendAsync("tick", wave, players);
+        private void SpawnMinion()
+        {
+            var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
+            leftToSpawn--;
+            for (int i = 0; i < PLAYER_COUNT; i++)
+            {
+                players[i].Minions.Add(minion);
+                //if (players[i].Health > 0)
+                //{
+                //    players[i].Minions.Add(minion);
+                //}
+            }
         }
 
         private void MoveMinions()
@@ -155,29 +193,56 @@ namespace TDServer
             }
         }
 
-        private void SpawnMinion()
+        private void FireTowers()
         {
-            var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
-            leftToSpawn--;
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                if (players[i].Health > 0)
+                foreach (Tower tower in players[i].Towers)
                 {
-                    players[i].Minions.Add(minion);
+                    if (tower.TicksBeforeShot-- > 0)
+                    {
+                        continue;
+                    }
+
+                    Minion minion = FindClosestMinion(tower, players[i].Minions);
+                    if (minion == null)
+                    {
+                        continue;
+                    }
+                    DamageMinion(players[i], tower, minion);
                 }
             }
         }
 
-        public void PlaceTower(string name, string towerName, int x, int y)
+        private void DamageMinion(Player player, Tower tower, Minion minion)
         {
-            Player player = GetPlayer(name);
-            if (player == null)
+            tower.TicksBeforeShot = SHOOT_EVERY_X_TICK / tower.Rate;
+            minion.Health -= tower.Damage;
+            if (minion.Health <= 0)
             {
-                return;
+                player.Minions.Remove(minion);
             }
+        }
 
-            ShortRangeFactory factory = new ShortRangeFactory();
-            player.Towers.Add(factory.CreateUniversalTower(x, y));
+        private Minion FindClosestMinion(Tower tower, List<Minion> minions)
+        {
+            double closestDistance = double.MaxValue;
+            Minion closest = null;
+            foreach (Minion minion in minions)
+            {
+                double distance = CalculateDistance(tower.Position, minion.Position);
+                if (distance < tower.Range && distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = minion;
+                }
+            }
+            return closest;
+        }
+
+        private double CalculateDistance(Position a, Position b)
+        {
+            return Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
         }
 
         private Player GetPlayer(string name)
