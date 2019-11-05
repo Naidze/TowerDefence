@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TDServer.Models.Towers
 {
-    public class Tower
+    public class Tower : ICloneable
     {
         private static int idCounter = 0;
 
@@ -34,6 +34,11 @@ namespace TDServer.Models.Towers
             Range = 50;
             Rate = 5;
             TicksBeforeShot = 0;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }

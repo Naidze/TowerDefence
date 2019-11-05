@@ -12,6 +12,7 @@ using TDServer.Models.Minions;
 using TDServer.Factory;
 using TDServer.AbstractFactory;
 using TDServer.Models.Towers;
+using TDServer.Adapter;
 
 namespace TDServer
 {
@@ -201,7 +202,9 @@ namespace TDServer
                 for (int j = players[i].Minions.Count - 1; j >= 0; j--)
                 {
                     var minion = players[i].Minions[j];
-                    if (!minion.Move())
+                    if (((minion is Crawler) && !new CrawlerAdapter(minion as Crawler, minion.Name).Move())
+                        || ((minion is Lizard) && !new LizardAdapter(minion as Lizard, minion.Name).Move())
+                        || ((minion is Noob) && !(minion as Noob).Move()))
                     {
                         players[i].Minions.RemoveAt(j);
                         players[i].Health--;

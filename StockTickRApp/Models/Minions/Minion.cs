@@ -7,7 +7,7 @@ using TDServer.Enums;
 
 namespace TDServer.Models.Minions
 {
-    public abstract class Minion
+    public abstract class Minion : ICloneable
     {
 
         private static int idCounter = 0;
@@ -28,42 +28,9 @@ namespace TDServer.Models.Minions
             Position = new Position(Game.map[0].X, Game.map[0].Y);
         }
 
-        public bool Move()
-        {
-            if (Position.Path == Game.map.Length)
-            {
-                return false;
-            }
-
-            var path = Game.map[Position.Path];
-            if (Position.X > path.X)
-            {
-                Position.X = Math.Max(Position.X - MoveSpeed, path.X);
-            }
-            else if (Position.X < path.X)
-            {
-                Position.X = Math.Min(Position.X + MoveSpeed, path.X);
-            }
-            else if (Position.Y > path.Y)
-            {
-                Position.Y = Math.Max(Position.Y - MoveSpeed, path.Y);
-            }
-            else if (Position.Y < path.Y)
-            {
-                Position.Y = Math.Min(Position.Y + MoveSpeed, path.Y);
-            }
-
-            if (Position.X == path.X && Position.Y == path.Y)
-            {
-                Position.Path++;
-            }
-            return Position.Path < Game.map.Length;
-        }
-
         public override bool Equals(object obj)
         {
-            Minion minion = obj as Minion;
-            if (minion == null)
+            if (!(obj is Minion minion))
             {
                 return false;
             }
@@ -73,6 +40,19 @@ namespace TDServer.Models.Minions
         public override int GetHashCode()
         {
             return Id.GetHashCode();
+        }
+
+        public object Clone()
+        {
+            var clone = (Minion)this.MemberwiseClone();
+            HandleCloned(clone);
+            return clone;
+        }
+
+        protected virtual void HandleCloned(Minion clone)
+        {
+            //Nothing particular in the base class, but maybe useful for children.
+            //Not abstract so children may not implement this if they don't need to.
         }
     }
 }
