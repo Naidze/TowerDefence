@@ -3,11 +3,14 @@ import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
 import MinionHandler from '../MinionHandler';
 import TowerHandler from '../TowerHandler';
+import { distance, distanceToLineSegment } from '../utils';
 
 export class Game extends Component {
 
-  halfTowerHeight = 17.5;
-  halfTowerWidth = 20;
+  minTowerDistance = 45;
+  minRoadDistance = 25;
+
+  gameMap = undefined;
 
   playerCanvas = undefined;
   playerContext = undefined;
@@ -17,20 +20,22 @@ export class Game extends Component {
   minionHandler = undefined;
   towerHandler = undefined;
 
+  name = '';
+  player = {};
+  opponent = {};
+
   constructor(props) {
     super(props);
 
     this.state = {
       hubConnection: null,
 
-      name: '',
       started: false,
 
-      wave: 0,
-      player: {},
-      opponent: {},
+      wave: 1,
 
       selectedTower: undefined,
+      placeable: undefined,
       mouseX: 0,
       mouseY: 0,
     }
@@ -42,8 +47,8 @@ export class Game extends Component {
   }
 
   componentDidMount() {
-    const name = window.sessionStorage.getItem("name");
-    if (!name) {
+    this.name = window.sessionStorage.getItem("name");
+    if (!this.name) {
       this.props.history.push('/');
       return;
     }
@@ -52,16 +57,24 @@ export class Game extends Component {
       .withUrl("http://localhost:62984/game")
       .build();
 
-    this.setState({ hubConnection, name }, () => {
+    this.setState({ hubConnection }, () => {
       this.state.hubConnection
         .start()
         .then(() => {
           console.log('Connection started!')
           this.state.hubConnection
-            .invoke('changeName', this.state.name)
+            .invoke('changeName', this.name)
+            .catch(err => console.error(err));
+
+          this.state.hubConnection
+            .invoke('askForMap')
             .catch(err => console.error(err));
         })
         .catch(err => console.log('Error while establishing connection :('));
+
+      this.state.hubConnection.on('getMap', (map) => {
+        this.gameMap = map;
+      });
 
       this.state.hubConnection.on('gameStarting', () => {
         this.setState({ started: true }, () => this.startGame());
@@ -75,12 +88,14 @@ export class Game extends Component {
         this.minionHandler.spawn(id, type);
       });
 
-      this.state.hubConnection.on('tick', (wave, gameState) =>
-        this.setState({
-          wave,
-          player: gameState.filter(user => user.name === this.state.name)[0],
-          opponent: gameState.filter(user => user.name !== this.state.name)[0]
-        }, () => this.tick()));
+      this.state.hubConnection.on('tick', (wave, gameState) => {
+        this.setState({ wave });
+        this.player = gameState.filter(user => user.name === this.name)[0];
+        this.opponent = gameState.filter(user => user.name !== this.name)[0];
+        if (this.player && this.opponent) {
+          this.tick();
+        }
+      });
     });
   }
 
@@ -98,11 +113,13 @@ export class Game extends Component {
     if (!this.playerContext) {
       this.startGame();
     }
-    this.handleState(this.playerCanvas, this.playerContext, this.state.player);
-    this.handleState(this.opponentCanvas, this.opponentContext, this.state.opponent);
+    this.handleState(this.playerCanvas, this.playerContext, this.player);
+    this.handleState(this.opponentCanvas, this.opponentContext, this.opponent);
 
     if (this.state.selectedTower) {
-      this.towerHandler.selectTower(this.playerContext, this.state.mouseX, this.state.mouseY);
+      this.setState({ placeable: this.isPlaceable()}, () => {
+        this.towerHandler.selectTower(this.playerContext, this.state.mouseX, this.state.mouseY, this.state.placeable);
+      })
     }
   }
 
@@ -120,10 +137,30 @@ export class Game extends Component {
     }
   }
 
+  isPlaceable() {
+    var placeable = true;
+    this.player.towers.forEach(tower => {
+      if (distance(this.state.mouseX, this.state.mouseY, tower.position.x, tower.position.y) < this.minTowerDistance) {
+        placeable = false;
+      }
+    })
+    if (!placeable) {
+      return false;
+    }
+    for (var i = 0; i < this.gameMap.length - 1; i++) {
+      var pointA = this.gameMap[i];
+      var pointB = this.gameMap[i + 1];
+      if (distanceToLineSegment(this.state.mouseX, this.state.mouseY, pointA.x, pointA.y, pointB.x, pointB.y) < this.minRoadDistance) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   handleCanvasClick() {
-    if (this.state.selectedTower) {
+    if (this.state.selectedTower && this.state.placeable) {
       this.state.hubConnection
-        .invoke('placeTower', this.state.name, 'archery_range', this.state.mouseX, this.state.mouseY)
+        .invoke('placeTower', this.name, 'archery_range', this.state.mouseX, this.state.mouseY)
         .catch(err => console.error(err));
     }
   }
@@ -147,7 +184,7 @@ export class Game extends Component {
             <h1 className="mb-1">Wave {this.state.wave}</h1>
             <div className="canvases">
               <div className="PlayerSpace">
-                <p>{this.state.player.health}❤️</p>
+                <p>{this.player.health}❤️</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
                   <div className="PlayerSpace__GameMenu__Tower">
@@ -156,7 +193,7 @@ export class Game extends Component {
                 </div>
               </div>
               <div>
-                <p>{this.state.opponent.health}❤️</p>
+                <p>{this.opponent.health}❤️</p>
                 <canvas className="opponentCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
               </div>
             </div>
