@@ -1,5 +1,8 @@
+import { distance } from "./utils";
+
 export default class TowerHandler {
 
+    distanceForClick = 40;
     archeryRange = undefined;
 
     constructor() {
@@ -24,6 +27,16 @@ export default class TowerHandler {
         context.fillStyle = placeable ? "rgba(255, 255, 255, .3)" : "rgba(255, 0, 0, .3)";
         context.arc(x, y, 50, 0, Math.PI * 2, true);
         context.fill();
+    }
+
+    getClickedTower(x, y, towers) {
+        var clickedTower = null;
+        towers.forEach(tower => {
+            if (distance(x, y, tower.position.x, tower.position.y) < this.distanceForClick) {
+                clickedTower = tower;
+            }
+        });
+        return clickedTower;
     }
 
 }

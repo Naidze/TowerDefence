@@ -157,11 +157,15 @@ export class Game extends Component {
     return true;
   }
 
-  handleCanvasClick() {
+  handleCanvasClick(event) {
     if (this.state.selectedTower && this.state.placeable) {
       this.state.hubConnection
-        .invoke('placeTower', this.name, 'archery_range', this.state.mouseX, this.state.mouseY)
+        .invoke('placeTower', this.name, 'archery_range', event.nativeEvent.offsetX,event.nativeEvent.offsetY)
         .catch(err => console.error(err));
+    }
+
+    if (!this.state.selectedTower) {
+      console.log(this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers))
     }
   }
 
