@@ -14,7 +14,7 @@ export default class MinionHandler {
     }
 
     spawn(context, minion) {
-        context.drawImage(this.noobImage, minion.position.x, minion.position.y);
+        context.drawImage(this.noobImage, minion.position.x - this.noobImage.width / 2, minion.position.y - this.noobImage.height / 2);
     }
 
 }

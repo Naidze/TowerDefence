@@ -35,8 +35,8 @@ namespace TDServer
                 {
                     INSTANCE = new Logger();
                 }
+                return INSTANCE;
             }
-            return INSTANCE;
         }
 
         /// <summary>

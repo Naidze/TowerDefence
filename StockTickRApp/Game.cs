@@ -19,14 +19,14 @@ namespace TDServer
     {
 
         public static readonly Path[] map = new Path[] {
-            new Path(-20, 185),
-            new Path(68, 185),
-            new Path(68, 68),
-            new Path(188, 68),
-            new Path(188, 228),
-            new Path(350, 228),
-            new Path(350, 147),
-            new Path(550, 147)
+            new Path(0, 220),
+            new Path(100, 220),
+            new Path(100, 100),
+            new Path(220, 100),
+            new Path(220, 260),
+            new Path(380, 260),
+            new Path(380, 180),
+            new Path(590, 180)
         };
 
         private const int PLAYER_COUNT = 2;
@@ -163,16 +163,14 @@ namespace TDServer
 
         private void SpawnMinions()
         {
-            //if (leftToSpawn == 0)
-            if (leftToSpawn == 0 && wave == 0)
+            if (leftToSpawn == 0)
             {
                 leftToSpawn = -1;
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(WAVE_INTERVAL);
                     wave++;
-                    leftToSpawn = 1;
-                    //leftToSpawn = 5 + (wave * 3);
+                    leftToSpawn = 5 + (wave * 3);
                 });
             }
             else if (leftToSpawn > 0 && ticksBeforeSpawn-- == 0)

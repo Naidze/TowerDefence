@@ -30,9 +30,9 @@ namespace TDServer.Models.Towers
         {
             Id = idCounter++;
             Position = new Position(x, y);
-            Damage = 30;
-            Range = 30;
-            Rate = 10;
+            Damage = 80;
+            Range = 50;
+            Rate = 5;
             TicksBeforeShot = 0;
         }
     }

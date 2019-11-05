@@ -120,10 +120,10 @@ export class Game extends Component {
     }
   }
 
-  handleCanvasClick(event) {
+  handleCanvasClick() {
     if (this.state.selectedTower) {
       this.state.hubConnection
-        .invoke('placeTower', this.state.name, 'archery_range', this.state.mouseX - this.halfTowerWidth, this.state.mouseY - this.halfTowerHeight)
+        .invoke('placeTower', this.state.name, 'archery_range', this.state.mouseX, this.state.mouseY)
         .catch(err => console.error(err));
     }
   }

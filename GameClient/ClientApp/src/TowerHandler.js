@@ -15,11 +15,11 @@ export default class TowerHandler {
     }
 
     paint(context, tower) {
-        context.drawImage(this.archeryRange, tower.position.x, tower.position.y);
+        context.drawImage(this.archeryRange, tower.position.x - this.archeryRange.width / 2, tower.position.y - this.archeryRange.height / 2);
     }
 
     selectTower(context, x, y, placeable) {
-        context.drawImage(this.archeryRange, x - this.archeryRange.width / 2, y - this.archeryRange.width / 2);
+        context.drawImage(this.archeryRange, x - this.archeryRange.width / 2, y - this.archeryRange.height / 2);
         context.beginPath();
         context.fillStyle = placeable ? "rgba(255, 255, 255, .3)" : "rgba(255, 0, 0, .3)";
         context.arc(x, y, 50, 0, Math.PI * 2, true);
