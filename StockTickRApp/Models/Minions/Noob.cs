@@ -6,11 +6,19 @@ using System.Threading.Tasks;
 
 namespace TDServer.Models.Minions
 {
-    public class Noob : Minion, IMinion
+    public class Noob : Minion, IMinion, ICloneable
     {
         public Noob() : base("noob")
         {
             Debug.WriteLine("Hi, I'm Noob!");
+        }
+
+        protected override void HandleCloned(Minion clone)
+        {
+            base.HandleCloned(clone);
+
+            Noob obj = (Noob)clone;
+            obj.Position = (Position)this.Position.Clone();
         }
 
         public bool Move()

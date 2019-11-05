@@ -7,7 +7,7 @@ using TDServer.Enums;
 
 namespace TDServer.Models.Minions
 {
-    public abstract class Minion
+    public abstract class Minion : ICloneable
     {
 
         private static int idCounter = 0;
@@ -40,6 +40,19 @@ namespace TDServer.Models.Minions
         public override int GetHashCode()
         {
             return Id.GetHashCode();
+        }
+
+        public object Clone()
+        {
+            var clone = (Minion)this.MemberwiseClone();
+            HandleCloned(clone);
+            return clone;
+        }
+
+        protected virtual void HandleCloned(Minion clone)
+        {
+            //Nothing particular in the base class, but maybe useful for children.
+            //Not abstract so children may not implement this if they don't need to.
         }
     }
 }

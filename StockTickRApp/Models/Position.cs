@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace TDServer.Models
 {
-    public class Position
+    public class Position : ICloneable
     {
         public int X { get; set; }
         public int Y { get; set; }
@@ -25,5 +25,9 @@ namespace TDServer.Models
             Path = 0;
         }
 
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }
