@@ -67,6 +67,10 @@ export class Game extends Component {
         this.setState({ started: true }, () => this.startGame());
       });
 
+      this.state.hubConnection.on('gameStopping', () => {
+        this.setState({ started: false });
+      });
+
       this.state.hubConnection.on('spawnMinion', (id, type) => {
         this.minionHandler.spawn(id, type);
       });

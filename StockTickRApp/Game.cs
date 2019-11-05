@@ -51,10 +51,11 @@ namespace TDServer
         private MinionFactory minionFactory;
 
         private Player[] players = new Player[PLAYER_COUNT];
-        private int wave = 0;
+        private bool gameStarted = false;
+        private int wave;
         private Timer gameLoop;
-        private int leftToSpawn = 0;
-        private int ticksBeforeSpawn = 0;
+        private int leftToSpawn;
+        private int ticksBeforeSpawn;
 
         public void AddPlayer(string connectionId)
         {
@@ -88,6 +89,10 @@ namespace TDServer
 
         public void RemovePlayer(string connectionId)
         {
+            if (gameStarted)
+            {
+                StopGame();
+            }
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
                 if (players[i] != null && players[i].Id == connectionId)
@@ -124,9 +129,21 @@ namespace TDServer
             player.Towers.Add(factory.CreateUniversalTower(x, y));
         }
 
+        private void StopGame()
+        {
+            gameStarted = false;
+            gameLoop.Dispose();
+            Hub.Clients.All.SendAsync("gameStopping");
+        }
+
         public void StartGame()
         {
             minionFactory = new MinionFactory();
+            gameStarted = true;
+            wave = 0;
+            leftToSpawn = 0;
+            ticksBeforeSpawn = 0;
+
             Logger.GetInstance().Info("Game is starting!");
             Hub.Clients.All.SendAsync("gameStarting");
             gameLoop = new System.Threading.Timer(
@@ -146,14 +163,16 @@ namespace TDServer
 
         private void SpawnMinions()
         {
-            if (leftToSpawn == 0)
+            //if (leftToSpawn == 0)
+            if (leftToSpawn == 0 && wave == 0)
             {
                 leftToSpawn = -1;
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(WAVE_INTERVAL);
                     wave++;
-                    leftToSpawn = 5 + (wave * 3);
+                    leftToSpawn = 1;
+                    //leftToSpawn = 5 + (wave * 3);
                 });
             }
             else if (leftToSpawn > 0 && ticksBeforeSpawn-- == 0)
