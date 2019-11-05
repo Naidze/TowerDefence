@@ -49,6 +49,26 @@ namespace TDServer.Models.Minions
             return clone;
         }
 
+        public int MoveUp()
+        {
+            return Position.Y - MoveSpeed;
+        }
+
+        public int MoveDown()
+        {
+            return Position.Y + MoveSpeed;
+        }
+
+        public int MoveLeft()
+        {
+            return Position.X - MoveSpeed;
+        }
+
+        public int MoveRight()
+        {
+            return Position.X + MoveSpeed;
+        }
+
         protected virtual void HandleCloned(Minion clone)
         {
             //Nothing particular in the base class, but maybe useful for children.
