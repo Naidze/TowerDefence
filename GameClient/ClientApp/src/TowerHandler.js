@@ -3,12 +3,13 @@ import { distance } from "./utils";
 export default class TowerHandler {
 
     distanceForClick = 40;
-    archeryRange = undefined;
+    images = [];
 
-    constructor() {
-        this.archeryRange = new Image();
-        this.archeryRange.src = `images/towers/archery_range.png`;
-        this.archeryRange.style.opacity = "0.5";
+    constructor(types) {
+        types.forEach(type => {
+            this.images[type] = new Image();
+            this.images[type].src = `images/towers/${type}.png`;
+        })
     }
 
     render(context, towers) {
@@ -18,11 +19,14 @@ export default class TowerHandler {
     }
 
     paint(context, tower) {
-        context.drawImage(this.archeryRange, tower.position.x - this.archeryRange.width / 2, tower.position.y - this.archeryRange.height / 2);
+        console.log(tower.name);
+        var image = this.images[tower.name];
+        context.drawImage(image, tower.position.x - image.width / 2, tower.position.y - image.height / 2);
     }
 
-    selectTower(context, x, y, placeable) {
-        context.drawImage(this.archeryRange, x - this.archeryRange.width / 2, y - this.archeryRange.height / 2);
+    selectTower(context, type, x, y, placeable) {
+        var image = this.images[type];
+        context.drawImage(image, x - image.width / 2, y - image.height / 2);
         context.beginPath();
         context.fillStyle = placeable ? "rgba(255, 255, 255, .3)" : "rgba(255, 0, 0, .3)";
         context.arc(x, y, 50, 0, Math.PI * 2, true);

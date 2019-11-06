@@ -10,10 +10,10 @@ using TDServer.Models;
 using Microsoft.AspNetCore.SignalR;
 using TDServer.Models.Minions;
 using TDServer.Factory;
-using TDServer.AbstractFactory;
 using TDServer.Models.Towers;
 using TDServer.Adapter;
 using System.Diagnostics;
+using TDServer.Enums;
 
 namespace TDServer
 {
@@ -50,7 +50,7 @@ namespace TDServer
             set;
         }
 
-        private MinionFactory minionFactory;
+        private UnitFactory unitFactory;
 
         private Player[] players = new Player[PLAYER_COUNT];
         private bool gameStarted = false;
@@ -136,8 +136,8 @@ namespace TDServer
                 return;
             }
 
-            ShortRangeFactory factory = new ShortRangeFactory();
-            Tower tower = factory.CreateUniversalTower(x, y);
+            Enum.TryParse(towerName.ToUpper(), out TowerType type);
+            Tower tower = unitFactory.CreateTower(type, new Position(x, y));
             if (player.Money < tower.Price)
             {
                 return;
@@ -155,7 +155,7 @@ namespace TDServer
 
         public void StartGame()
         {
-            minionFactory = new MinionFactory();
+            unitFactory = new UnitFactory();
             gameStarted = true;
             foreach (Player player in players)
             {
@@ -204,7 +204,7 @@ namespace TDServer
 
         private void SpawnMinion()
         {
-            var minion = minionFactory.CreateMinion(Enums.MinionType.NOOB);
+            var minion = unitFactory.CreateMinion(Enums.MinionType.NOOB);
             leftToSpawn--;
             for (int i = 0; i < PLAYER_COUNT; i++)
             {

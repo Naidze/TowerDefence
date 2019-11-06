@@ -4,11 +4,14 @@ import { HubConnectionBuilder } from '@aspnet/signalr';
 import MinionHandler from '../MinionHandler';
 import TowerHandler from '../TowerHandler';
 import { distance, distanceToLineSegment } from '../utils';
+import Tower from './Tower';
 
 export class Game extends Component {
 
   minTowerDistance = 45;
   minRoadDistance = 25;
+
+  towerTypes = [ "soldier", "archer" ];
 
   gameMap = undefined;
 
@@ -115,7 +118,7 @@ export class Game extends Component {
     this.opponentContext = this.opponentCanvas.getContext('2d');
 
     this.minionHandler = new MinionHandler();
-    this.towerHandler = new TowerHandler();
+    this.towerHandler = new TowerHandler(this.towerTypes);
   }
 
   tick() {
@@ -127,7 +130,7 @@ export class Game extends Component {
 
     if (this.state.selectedTower) {
       this.setState({ placeable: this.isPlaceable() }, () => {
-        this.towerHandler.selectTower(this.playerContext, this.state.mouseX, this.state.mouseY, this.state.placeable);
+        this.towerHandler.selectTower(this.playerContext, this.state.selectedTower, this.state.mouseX, this.state.mouseY, this.state.placeable);
       })
     }
   }
@@ -169,7 +172,7 @@ export class Game extends Component {
   handleCanvasClick(event) {
     if (this.state.selectedTower && this.state.placeable) {
       this.state.hubConnection
-        .invoke('placeTower', this.name, 'archery_range', event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+        .invoke('placeTower', this.name, this.state.selectedTower, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
         .catch(err => console.error(err));
     }
 
@@ -189,6 +192,10 @@ export class Game extends Component {
   }
 
   render() {
+    var towers = this.towerTypes.map(type => 
+      <Tower name={type} click={this.selectTower} key={type} />
+    );
+
     return (
       <div>
         {!this.state.started && <h1 className="mb-1">Waiting for players..</h1>}
@@ -200,9 +207,7 @@ export class Game extends Component {
                 <p>{this.player.health}❤️   {this.player.money}💰</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
-                  <div className="PlayerSpace__GameMenu__Tower">
-                    <img onClick={() => this.selectTower('archer')} src={process.env.PUBLIC_URL + "/images/towers/archery_range.png"} alt="" />
-                  </div>
+                  {towers}
                 </div>
               </div>
               <div>
