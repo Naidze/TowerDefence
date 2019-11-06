@@ -18,7 +18,7 @@ namespace TDServer.Models
         public int Health { get; set; }
         public int Money { get; set; }
         public List<Minion> Minions { get; set; }
-        public List<Tower> Towers { get; set; }
+        public List<EnemyAttacker> Towers { get; set; }
 
         public Player(string id)
         {
@@ -26,7 +26,7 @@ namespace TDServer.Models
             Health = STARTING_HEALTH;
             Money = STARTING_MONEY;
             Minions = new List<Minion>();
-            Towers = new List<Tower>();
+            Towers = new List<EnemyAttacker>();
         }
     }
 }

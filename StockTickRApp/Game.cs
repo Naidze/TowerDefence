@@ -14,6 +14,7 @@ using TDServer.Models.Towers;
 using TDServer.Adapter;
 using System.Diagnostics;
 using TDServer.Enums;
+using TDServer.Decorator;
 
 namespace TDServer
 {
@@ -138,12 +139,14 @@ namespace TDServer
 
             Enum.TryParse(towerName.ToUpper(), out TowerType type);
             Tower tower = unitFactory.CreateTower(type, new Position(x, y));
+            EnemyAttacker attacker = new HighDamage(new HighRate(new LongRange(tower)));
+
             if (player.Money < tower.Price)
             {
                 return;
             }
-            player.Money -= tower.Price;
-            player.Towers.Add(tower);
+            player.Money -= attacker.Price;
+            player.Towers.Add(attacker);
         }
 
         private void StopGame()
@@ -160,7 +163,7 @@ namespace TDServer
             foreach (Player player in players)
             {
                 player.Minions = new List<Minion>();
-                player.Towers = new List<Tower>();
+                player.Towers = new List<EnemyAttacker>();
             }
             wave = 0;
             leftToSpawn = 0;
@@ -238,7 +241,7 @@ namespace TDServer
         {
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
-                foreach (Tower tower in players[i].Towers)
+                foreach (EnemyAttacker tower in players[i].Towers)
                 {
                     if (tower.TicksBeforeShot-- > 0)
                     {
@@ -255,7 +258,7 @@ namespace TDServer
             }
         }
 
-        private void DamageMinion(Player player, Tower tower, Minion minion)
+        private void DamageMinion(Player player, EnemyAttacker tower, Minion minion)
         {
             tower.TicksBeforeShot = SHOOT_EVERY_X_TICK / tower.Rate;
             minion.Health -= tower.Damage;
@@ -266,7 +269,7 @@ namespace TDServer
             }
         }
 
-        private Minion FindClosestMinion(Tower tower, List<Minion> minions)
+        private Minion FindClosestMinion(EnemyAttacker tower, List<Minion> minions)
         {
             double closestDistance = double.MaxValue;
             Minion closest = null;
