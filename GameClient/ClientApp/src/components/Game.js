@@ -188,7 +188,7 @@ export class Game extends Component {
             <h1 className="mb-1">Wave {this.state.wave}</h1>
             <div className="canvases">
               <div className="PlayerSpace">
-                <p>{this.player.health}❤️</p>
+                <p>{this.player && this.player.health}❤️</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
                   <div className="PlayerSpace__GameMenu__Tower">
@@ -197,7 +197,7 @@ export class Game extends Component {
                 </div>
               </div>
               <div>
-                <p>{this.opponent.health}❤️</p>
+                <p>{this.opponent && this.opponent.health}❤️</p>
                 <canvas className="opponentCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
               </div>
             </div>
