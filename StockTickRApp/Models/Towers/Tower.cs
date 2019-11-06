@@ -11,7 +11,7 @@ namespace TDServer.Models.Towers
 
         public int Id { get; set; }
         public Position Position { get; set; }
-        public int Cost { get; set; }
+        public int Price { get; set; }
         public int Range { get; set; }
         public int Damage { get; set; }
         public int Rate { get; set; }
@@ -20,6 +20,7 @@ namespace TDServer.Models.Towers
         public Tower()
         {
             Id = idCounter++;
+            Price = 25;
             Damage = 70;
             Range = 30;
             Rate = 1;
@@ -30,6 +31,7 @@ namespace TDServer.Models.Towers
         {
             Id = idCounter++;
             Position = new Position(x, y);
+            Price = 25;
             Damage = 80;
             Range = 50;
             Rate = 5;

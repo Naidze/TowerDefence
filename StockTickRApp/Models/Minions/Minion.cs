@@ -16,6 +16,7 @@ namespace TDServer.Models.Minions
         public string Name { get; set; }
         public int Health { get; set; }
         public int MoveSpeed { get; set; }
+        public int Reward { get; set; }
         public MoveType MoveType { get; set; }
         public Position Position { get; set; }
 
@@ -23,6 +24,7 @@ namespace TDServer.Models.Minions
         {
             Id = idCounter++;
             Name = name;
+            Reward = 10;
             Health = 100;
             MoveSpeed = 1;
             Position = new Position(Game.map[0].X, Game.map[0].Y);

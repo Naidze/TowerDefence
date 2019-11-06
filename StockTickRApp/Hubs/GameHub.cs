@@ -17,7 +17,13 @@ namespace TDServer.Hubs
 
         public override Task OnConnectedAsync()
         {
-            _game.AddPlayer(Context.ConnectionId);
+            if (_game.AddPlayer(Context.ConnectionId))
+            {
+                Clients.Caller.SendAsync("getConnectionId", Context.ConnectionId);
+            } else
+            {
+                Clients.Caller.SendAsync("gameFull");
+            }
             return base.OnConnectedAsync();
         }
 

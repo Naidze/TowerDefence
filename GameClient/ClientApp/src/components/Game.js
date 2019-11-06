@@ -72,6 +72,15 @@ export class Game extends Component {
         })
         .catch(err => console.log('Error while establishing connection :('));
 
+      this.state.hubConnection.on('gameFull', () => {
+        sessionStorage.removeItem('name');
+        this.props.history.push('/');
+      });
+
+      this.state.hubConnection.on('getConnectionId', (id) => {
+        this.id = id;
+      });
+
       this.state.hubConnection.on('getMap', (map) => {
         this.gameMap = map;
       });
@@ -90,8 +99,8 @@ export class Game extends Component {
 
       this.state.hubConnection.on('tick', (wave, gameState) => {
         this.setState({ wave });
-        this.player = gameState.filter(user => user.name === this.name)[0];
-        this.opponent = gameState.filter(user => user.name !== this.name)[0];
+        this.player = gameState.filter(user => user.id === this.id)[0];
+        this.opponent = gameState.filter(user => user.id !== this.id)[0];
         if (this.player && this.opponent) {
           this.tick();
         }
@@ -117,7 +126,7 @@ export class Game extends Component {
     this.handleState(this.opponentCanvas, this.opponentContext, this.opponent);
 
     if (this.state.selectedTower) {
-      this.setState({ placeable: this.isPlaceable()}, () => {
+      this.setState({ placeable: this.isPlaceable() }, () => {
         this.towerHandler.selectTower(this.playerContext, this.state.mouseX, this.state.mouseY, this.state.placeable);
       })
     }
@@ -160,7 +169,7 @@ export class Game extends Component {
   handleCanvasClick(event) {
     if (this.state.selectedTower && this.state.placeable) {
       this.state.hubConnection
-        .invoke('placeTower', this.name, 'archery_range', event.nativeEvent.offsetX,event.nativeEvent.offsetY)
+        .invoke('placeTower', this.name, 'archery_range', event.nativeEvent.offsetX, event.nativeEvent.offsetY)
         .catch(err => console.error(err));
     }
 
@@ -188,7 +197,7 @@ export class Game extends Component {
             <h1 className="mb-1">Wave {this.state.wave}</h1>
             <div className="canvases">
               <div className="PlayerSpace">
-                <p>{this.player && this.player.health}❤️</p>
+                <p>{this.player.health}❤️   {this.player.money}💰</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
                   <div className="PlayerSpace__GameMenu__Tower">
@@ -197,7 +206,7 @@ export class Game extends Component {
                 </div>
               </div>
               <div>
-                <p>{this.opponent && this.opponent.health}❤️</p>
+                <p>{this.opponent.health}❤️</p>
                 <canvas className="opponentCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
               </div>
             </div>

@@ -13,6 +13,7 @@ using TDServer.Factory;
 using TDServer.AbstractFactory;
 using TDServer.Models.Towers;
 using TDServer.Adapter;
+using System.Diagnostics;
 
 namespace TDServer
 {
@@ -32,7 +33,7 @@ namespace TDServer
 
         private const int PLAYER_COUNT = 2;
 
-        private const int TICK_INTERVAL = 10;
+        private const int TICK_INTERVAL = 15;
         private const int WAVE_INTERVAL = 1000;
 
         private const int SPAWN_EVERY_X_TICK = 10;
@@ -58,22 +59,29 @@ namespace TDServer
         private int leftToSpawn;
         private int ticksBeforeSpawn;
 
-        public void AddPlayer(string connectionId)
+        public bool AddPlayer(string connectionId)
         {
+            bool added = false;
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
                 if (players[i] == null)
                 {
                     players[i] = new Player(connectionId);
                     Logger.GetInstance().Info("Player " + (i + 1) + " has joined, id: " + connectionId);
+                    added = true;
                     break;
                 }
             }
 
+            if (!added)
+            {
+                return false;
+            }
             if (ReadyToStart())
             {
                 StartGame();
             }
+            return true;
         }
 
         private bool ReadyToStart()
@@ -107,6 +115,8 @@ namespace TDServer
 
         public void ChangeName(string connectionId, string name)
         {
+            Debug.WriteLine("Changing name " + connectionId + " to: " + name);
+
             for (int i = 0; i < PLAYER_COUNT; i++)
             {
                 if (players[i] != null && players[i].Id == connectionId)
@@ -127,7 +137,13 @@ namespace TDServer
             }
 
             ShortRangeFactory factory = new ShortRangeFactory();
-            player.Towers.Add(factory.CreateUniversalTower(x, y));
+            Tower tower = factory.CreateUniversalTower(x, y);
+            if (player.Money < tower.Price)
+            {
+                return;
+            }
+            player.Money -= tower.Price;
+            player.Towers.Add(tower);
         }
 
         private void StopGame()
@@ -141,6 +157,11 @@ namespace TDServer
         {
             minionFactory = new MinionFactory();
             gameStarted = true;
+            foreach (Player player in players)
+            {
+                player.Minions = new List<Minion>();
+                player.Towers = new List<Tower>();
+            }
             wave = 0;
             leftToSpawn = 0;
             ticksBeforeSpawn = 0;
@@ -240,6 +261,7 @@ namespace TDServer
             minion.Health -= tower.Damage;
             if (minion.Health <= 0)
             {
+                player.Money += minion.Reward;
                 player.Minions.Remove(minion);
             }
         }

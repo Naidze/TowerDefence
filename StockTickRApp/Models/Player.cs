@@ -11,10 +11,12 @@ namespace TDServer.Models
     {
 
         private static readonly int STARTING_HEALTH = 20;
+        private static readonly int STARTING_MONEY = 200;
 
         public string Id { get; set; }
         public string Name { get; set; }
         public int Health { get; set; }
+        public int Money { get; set; }
         public List<Minion> Minions { get; set; }
         public List<Tower> Towers { get; set; }
 
@@ -22,6 +24,7 @@ namespace TDServer.Models
         {
             Id = id;
             Health = STARTING_HEALTH;
+            Money = STARTING_MONEY;
             Minions = new List<Minion>();
             Towers = new List<Tower>();
         }
