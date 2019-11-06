@@ -30,7 +30,6 @@ namespace TDServer.Factory
         {
             switch (type)
             {
-
                 case TowerType.SOLDIER:
                     return new TowerBuilder(position)
                         .SetName(type.ToString().ToLower())

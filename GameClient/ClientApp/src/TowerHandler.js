@@ -19,7 +19,6 @@ export default class TowerHandler {
     }
 
     paint(context, tower) {
-        console.log(tower.name);
         var image = this.images[tower.name];
         context.drawImage(image, tower.position.x - image.width / 2, tower.position.y - image.height / 2);
     }
