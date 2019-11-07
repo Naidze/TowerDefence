@@ -141,6 +141,7 @@ export class Game extends Component {
 
     if (this.state.upgradingTower) {
       var upgradingTower = this.player.towers.filter(tower => tower.id === this.state.upgradingTower.id)[0];
+      this.towerHandler.highlightTower(this.playerContext, upgradingTower);
       this.setState({ upgradingTower });
     }
   }
@@ -184,6 +185,7 @@ export class Game extends Component {
       this.state.hubConnection
         .invoke('placeTower', this.name, this.state.selectedTower, event.nativeEvent.offsetX, event.nativeEvent.offsetY)
         .catch(err => console.error(err));
+      this.setState({ selectedTower: undefined });
     }
 
     if (this.state.upgradingTower) {
@@ -224,12 +226,14 @@ export class Game extends Component {
     this.state.hubConnection
       .invoke('sellTower', this.name, this.state.upgradingTower.id)
       .catch(err => console.error(err));
+      this.setState({ upgradingTower: undefined });
   }
 
   render() {
     var towers = this.towerTypes.map(type =>
       <Tower name={type} click={this.selectTower} key={type} />
     );
+
     return (
       <div>
         {!this.state.started && <h1 className="mb-1">Waiting for players..</h1>}

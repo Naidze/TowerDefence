@@ -32,6 +32,13 @@ export default class TowerHandler {
         context.fill();
     }
 
+    highlightTower(context, tower) {
+        context.beginPath();
+        context.fillStyle = "rgba(255, 255, 255, .3)";
+        context.arc(tower.position.x, tower.position.y, tower.range, 0, Math.PI * 2, true);
+        context.fill();
+    }
+
     getClickedTower(x, y, towers) {
         var clickedTower = null;
         towers.forEach(tower => {
