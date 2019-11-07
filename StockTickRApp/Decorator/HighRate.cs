@@ -11,7 +11,7 @@ namespace TDServer.Decorator
     {
         public HighRate(EnemyAttacker attacker) : base(attacker)
         {
-            Rate = _attacker.Rate + 10;
+            Rate = (int) (_attacker.Rate * 1.2);
             string upgrade = "rate";
             if (!attacker.Upgrades.ContainsKey(upgrade))
             {

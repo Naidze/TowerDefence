@@ -11,7 +11,7 @@ namespace TDServer.Decorator
     {
         public LongRange(EnemyAttacker attacker) : base(attacker)
         {
-            Range = _attacker.Range + 10;
+            Range = (int) (_attacker.Range * 1.1);
             string upgrade = "range";
             if (!attacker.Upgrades.ContainsKey(upgrade))
             {

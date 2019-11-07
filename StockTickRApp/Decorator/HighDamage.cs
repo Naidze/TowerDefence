@@ -11,7 +11,7 @@ namespace TDServer.Decorator
     {
         public HighDamage(EnemyAttacker attacker) : base(attacker)
         {
-            Damage = _attacker.Damage + 20;
+            Damage = (int) (_attacker.Damage * 1.1);
             string upgrade = "damage";
             if (!attacker.Upgrades.ContainsKey(upgrade)) {
                 attacker.Upgrades.Add(upgrade, 0);

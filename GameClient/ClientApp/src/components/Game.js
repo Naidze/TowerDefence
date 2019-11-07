@@ -141,7 +141,6 @@ export class Game extends Component {
 
     if (this.state.upgradingTower) {
       var upgradingTower = this.player.towers.filter(tower => tower.id === this.state.upgradingTower.id)[0];
-      console.log(upgradingTower);
       this.setState({ upgradingTower });
     }
   }
