@@ -6,6 +6,7 @@ using TDServer.Factory;
 using System.Diagnostics;
 using TDServer.Helpers;
 using TDServer.Models.Towers;
+using TDServer.Facade;
 
 namespace TDServer
 {
@@ -13,6 +14,12 @@ namespace TDServer
     {
 
         public Player[] players = new Player[GameUtils.PLAYER_COUNT];
+        public bool gameStarted = false;
+        public int wave;
+        public Timer gameLoop;
+        public int leftToSpawn;
+        public int ticksBeforeSpawn;
+        public UnitFactory unitFactory;
 
         public Game(IHubContext<GameHub> hub)
         {
@@ -24,14 +31,6 @@ namespace TDServer
             get;
             set;
         }
-
-        public UnitFactory unitFactory;
-
-        public bool gameStarted = false;
-        public int wave;
-        public Timer gameLoop;
-        public int leftToSpawn;
-        public int ticksBeforeSpawn;
 
         public void ChangeName(string connectionId, string name)
         {
@@ -59,7 +58,5 @@ namespace TDServer
             }
             return null;
         }
-
     }
-
 }

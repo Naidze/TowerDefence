@@ -11,9 +11,9 @@ namespace TDServer.Facade
 {
     public class MinionManager
     {
-        private readonly Game _game;
+        private readonly TDServer.Game _game;
 
-        public MinionManager(Game game)
+        public MinionManager(TDServer.Game game)
         {
             _game = game;
         }

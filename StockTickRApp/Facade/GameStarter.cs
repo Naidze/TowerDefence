@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDServer.Factory;
 using TDServer.Helpers;
+using TDServer.Hubs;
 using TDServer.Models;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
@@ -14,12 +15,12 @@ namespace TDServer.Facade
     public class GameStarter
     {
         private readonly Game _game;
-        private readonly GameManager _gameManager;
+        private readonly Ticker _ticker;
 
-        public GameStarter(Game game, GameManager gameManager)
+        public GameStarter(Game game, Ticker ticker)
         {
             _game = game;
-            _gameManager = gameManager;
+            _ticker = ticker;
         }
 
         public bool AddPlayer(string connectionId)
@@ -77,7 +78,7 @@ namespace TDServer.Facade
             Logger.GetInstance().Info("Game is starting!");
             _game.Hub.Clients.All.SendAsync("gameStarting");
             _game.gameLoop = new System.Threading.Timer(
-                e => _gameManager.Tick(),
+                e => _ticker.Tick(),
                 null,
                 TimeSpan.Zero,
             TimeSpan.FromMilliseconds(GameUtils.TICK_INTERVAL));

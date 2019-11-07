@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace TDServer.Facade
 {
-    public class GameManager
+    public class Ticker
     {
         private readonly Game _game;
         private readonly TowerManager _towerManager;
         private readonly MinionManager _minionManager;
 
-        public GameManager(Game game, TowerManager towerManager, MinionManager minionManager)
+        public Ticker(Game game, MinionManager minionManager, TowerManager towerManager)
         {
             _game = game;
             _towerManager = towerManager;

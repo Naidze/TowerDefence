@@ -14,17 +14,18 @@ namespace TDServer.Hubs
         private readonly GameStarter _gameStarter;
         private readonly GameStopper _gameStopper;
         private readonly TowerManager _towerManager;
-        private readonly GameManager _gameManager;
         private readonly MinionManager _minionManager;
+        private readonly Ticker _ticker;
+
 
         public GameHub(Game game)
         {
             _game = game;
-            _gameStopper = new GameStopper(game);
             _towerManager = new TowerManager(game);
             _minionManager = new MinionManager(game);
-            _gameManager = new GameManager(game, _towerManager, _minionManager);
-            _gameStarter = new GameStarter(game, _gameManager);
+            _ticker = new Ticker(game, _minionManager, _towerManager);
+            _gameStarter = new GameStarter(game, _ticker);
+            _gameStopper = new GameStopper(game);
         }
 
         public override Task OnConnectedAsync()
