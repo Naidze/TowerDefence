@@ -18,6 +18,8 @@ namespace TDServer.Strategy
             Tower = tower;
         }
 
+        public string Name => "closest";
+
         public Minion SelectEnemy( List<Minion> minions)
         {
             double closestDistance = double.MaxValue;

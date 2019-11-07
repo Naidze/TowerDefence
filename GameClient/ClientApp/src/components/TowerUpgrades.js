@@ -3,14 +3,22 @@ import { Button } from 'reactstrap';
 
 export default class TowerUpgrades extends Component {
 
-  render () {
-    return (
-        <div className="PlayerSpace__GameMenu__">
-            <Button onClick={() => this.props.changeAttackMode('closest')} className="ml-2" color="secondary">closest</Button>{' '}
-            <Button onClick={() => this.props.changeAttackMode('furthest')} color="secondary">furthest</Button>{' '}
-            <Button onClick={() => this.props.changeAttackMode('weakest')} color="secondary">weakest</Button>{' '}
-            <Button onClick={() => this.props.changeAttackMode('strongest')} color="secondary">strongest</Button>{' '}
-        </div>
-    );
-  }
+    attackModes = [
+        'closest', 'furthest', 'weakest', 'strongest'
+    ]
+
+    render() {
+        var modes = this.attackModes.map(mode =>
+            <Button key={mode}
+                onClick={() => this.props.changeAttackMode(mode)} className="ml-2"
+                color={this.props.tower.attackMode.name === mode ? "primary" : "secondary"}>
+                {mode}
+            </Button>
+        )
+        return (
+            <div>
+                {modes}
+            </div>
+        );
+    }
 }

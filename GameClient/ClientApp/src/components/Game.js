@@ -136,6 +136,11 @@ export class Game extends Component {
         this.towerHandler.selectTower(this.playerContext, this.state.selectedTower, this.state.mouseX, this.state.mouseY, this.state.placeable);
       })
     }
+
+    if (this.state.upgradingTower) {
+      var upgradingTower = this.player.towers.filter(tower => tower.id === this.state.upgradingTower.id)[0];
+      this.setState({ upgradingTower });
+    }
   }
 
   handleState(canvas, context, state) {
@@ -186,6 +191,7 @@ export class Game extends Component {
     if (!this.state.selectedTower) {
       var clickedTower = this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers);
       if (clickedTower) {
+        console.log(clickedTower)
         this.setState({ upgradingTower: clickedTower })
       }
     }
@@ -203,8 +209,8 @@ export class Game extends Component {
 
   changeAttackMode(mode) {
     this.state.hubConnection
-    .invoke('changeAttackMode', this.name, this.state.upgradingTower.id, mode)
-    .catch(err => console.error(err));
+      .invoke('changeAttackMode', this.name, this.state.upgradingTower.id, mode)
+      .catch(err => console.error(err));
   }
 
   render() {
@@ -222,7 +228,7 @@ export class Game extends Component {
                 <p>{this.player.health}❤️   {this.player.money}💰</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
-                  {this.state.upgradingTower ? <TowerUpgrades changeAttackMode={this.changeAttackMode} /> : towers}
+                  {this.state.upgradingTower ? <TowerUpgrades tower={this.state.upgradingTower} changeAttackMode={this.changeAttackMode} /> : towers}
                 </div>
               </div>
               <div>

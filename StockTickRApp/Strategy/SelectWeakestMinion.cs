@@ -15,6 +15,8 @@ namespace TDServer.Strategy
             Tower = tower;
         }
 
+        public string Name => "weakest";
+
         public Minion SelectEnemy(List<Minion> minions)
         {
             int weakestHealth = int.MaxValue;

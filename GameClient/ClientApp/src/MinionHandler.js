@@ -15,8 +15,14 @@ export default class MinionHandler {
 
     spawn(context, minion) {
         context.drawImage(this.noobImage, minion.position.x - this.noobImage.width / 2, minion.position.y - this.noobImage.height / 2);
-        context.fillStyle = this.getColor(minion.health, minion.startingHealth);
-        context.fillRect(minion.position.x - 5, minion.position.y - 30, (minion.health / minion.startingHealth) * 15, 5);
+        this.drawHealthBar(context, minion);
+    }
+
+    drawHealthBar(context, minion) {
+        if (minion.health !== minion.startingHealth) {
+            context.fillStyle = this.getColor(minion.health, minion.startingHealth);
+            context.fillRect(minion.position.x - 5, minion.position.y - 30, (minion.health / minion.startingHealth) * 15, 5);
+        }
     }
 
     getColor(health, startingHealth) {

@@ -18,6 +18,8 @@ namespace TDServer.Strategy
             Tower = tower;
         }
 
+        public string Name => "strongest";
+
         public Minion SelectEnemy(List<Minion> minions)
         {
             int strongestHealth = int.MinValue;
