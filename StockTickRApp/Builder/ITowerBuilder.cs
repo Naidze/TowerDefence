@@ -10,7 +10,6 @@ namespace TDServer.Builder
     interface ITowerBuilder
     {
         TowerBuilder SetName(string name);
-        TowerBuilder SetPosition(Position position);
         TowerBuilder SetRate(int rate);
         TowerBuilder SetRange(int range);
         TowerBuilder SetDamage(int damage);

@@ -27,12 +27,6 @@ namespace TDServer.Builder
             return this;
         }
 
-        public TowerBuilder SetPosition(Position position)
-        {
-            Position = position;
-            return this;
-        }
-
         public TowerBuilder SetDamage(int damage)
         {
             Damage = damage;
