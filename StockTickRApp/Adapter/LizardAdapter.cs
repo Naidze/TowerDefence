@@ -10,14 +10,14 @@ namespace TDServer.Adapter
     {
         private readonly Lizard _lizard;
 
-        public LizardAdapter(Lizard lizard, string name) : base(name)
+        public LizardAdapter(Lizard lizard, string name) : base(name, 50, 1, 25)
         {
             _lizard = lizard;
         }
 
         public bool Move()
         {
-            return _lizard.Run();
+            return _lizard.Fly();
         }
     }
 }

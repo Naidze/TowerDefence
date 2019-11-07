@@ -10,13 +10,25 @@ namespace TDServer.Models.Minions
 {
     public class Lizard : Minion
     {
-        public Lizard() : base("crawler")
+        public Lizard() : base("lizard", 50, 1, 25)
         {
-            Debug.WriteLine("Hi, I'm Lizard!");
+            
         }
 
-        public bool Run()
+        protected override void HandleCloned(Minion clone)
         {
+            base.HandleCloned(clone);
+
+            Lizard obj = (Lizard)clone;
+            obj.Position = (Position)this.Position.Clone();
+        }
+
+        public bool Fly()
+        {
+            if (Position.Path < GameUtils.map.Length - 1)
+            {
+                Position.Path = GameUtils.map.Length - 2;
+            }
             if (Position.Path == GameUtils.map.Length)
             {
                 return false;
@@ -31,7 +43,8 @@ namespace TDServer.Models.Minions
             {
                 Position.X = Math.Min(new Right(this).Execute(), path.X);
             }
-            else if (Position.Y > path.Y)
+
+            if (Position.Y > path.Y)
             {
                 Position.Y = Math.Max(new Up(this).Execute(), path.Y);
             }

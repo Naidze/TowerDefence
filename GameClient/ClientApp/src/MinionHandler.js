@@ -1,10 +1,12 @@
 export default class MinionHandler {
 
-    noobImage = undefined;
+    images = [];
 
-    constructor() {
-        this.noobImage = new Image();
-        this.noobImage.src = `images/minions/noob.png`;
+    constructor(types) {
+        types.forEach(type => {
+            this.images[type] = new Image();
+            this.images[type].src = `images/minions/${type}.png`;
+        })
     }
 
     render(context, minions) {
@@ -14,7 +16,8 @@ export default class MinionHandler {
     }
 
     spawn(context, minion) {
-        context.drawImage(this.noobImage, minion.position.x - this.noobImage.width / 2, minion.position.y - this.noobImage.height / 2);
+        var image = this.images[minion.name];
+        context.drawImage(image, minion.position.x - image.width / 2, minion.position.y - image.height / 2);
         this.drawHealthBar(context, minion);
     }
 

@@ -31,5 +31,9 @@ namespace TDServer.Models.Towers
             return Id.Equals(attacker.Id);
         }
 
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
     }
 }

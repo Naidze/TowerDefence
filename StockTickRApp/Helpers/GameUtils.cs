@@ -23,7 +23,7 @@ namespace TDServer.Helpers
         public const int PLAYER_COUNT = 2;
         public const int TICK_INTERVAL = 15;
         public const int WAVE_INTERVAL = 1000;
-        public const int SPAWN_EVERY_X_TICK = 10;
+        public const int SPAWN_EVERY_X_TICK = 15;
         public const int SHOOT_EVERY_X_TICK = 20;
 
         public static double CalculateDistance(Position a, Position b)

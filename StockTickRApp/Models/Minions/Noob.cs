@@ -10,9 +10,9 @@ namespace TDServer.Models.Minions
 {
     public class Noob : Minion, IMinion, ICloneable
     {
-        public Noob() : base("noob")
+        public Noob() : base("noob", 20, 2, 10)
         {
-            Debug.WriteLine("Hi, I'm Noob!");
+
         }
 
         protected override void HandleCloned(Minion clone)

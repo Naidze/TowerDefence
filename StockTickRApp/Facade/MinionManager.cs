@@ -11,11 +11,13 @@ namespace TDServer.Facade
 {
     public class MinionManager
     {
-        private readonly TDServer.Game _game;
+        private readonly Game _game;
+        private readonly Random _random;
 
-        public MinionManager(TDServer.Game game)
+        public MinionManager(Game game)
         {
             _game = game;
+            _random = new Random();
         }
 
         public void SpawnMinions()
@@ -39,7 +41,7 @@ namespace TDServer.Facade
 
         private void SpawnMinion()
         {
-            var minion = _game.unitFactory.CreateMinion(Enums.MinionType.NOOB);
+            Minion minion = GetMinionToSpawn();
             _game.leftToSpawn--;
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
             {
@@ -50,6 +52,7 @@ namespace TDServer.Facade
                 //}
             }
         }
+
         public void MoveMinions()
         {
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
@@ -65,6 +68,24 @@ namespace TDServer.Facade
                         _game.players[i].Health--;
                     }
                 }
+            }
+        }
+
+        private Minion GetMinionToSpawn()
+        {
+            int pct = _random.Next(1, 11);
+            if (pct > 8 && _game.wave >= 8)
+            {
+                return _game.unitFactory.CreateMinion(Enums.MinionType.LIZARD);
+
+            }
+            else if (pct > 6 && _game.wave >= 3)
+            {
+                return _game.unitFactory.CreateMinion(Enums.MinionType.CRAWLER);
+            }
+            else
+            {
+                return _game.unitFactory.CreateMinion(Enums.MinionType.NOOB);
             }
         }
     }

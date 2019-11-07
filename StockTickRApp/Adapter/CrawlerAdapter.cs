@@ -10,7 +10,7 @@ namespace TDServer.Adapter
     {
         private readonly Crawler _crawler;
 
-        public CrawlerAdapter(Crawler crawler, string name) : base(name)
+        public CrawlerAdapter(Crawler crawler, string name) : base(name, 20, 4, 15)
         {
             _crawler = crawler;
         }

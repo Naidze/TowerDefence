@@ -13,6 +13,7 @@ export class Game extends Component {
   minRoadDistance = 25;
 
   towerTypes = ["soldier", "archer"];
+  minionTypes = ["noob", "lizard", "crawler"]
 
   gameMap = undefined;
 
@@ -122,7 +123,7 @@ export class Game extends Component {
     this.opponentCanvas = document.querySelector('.opponentCanvas');
     this.opponentContext = this.opponentCanvas.getContext('2d');
 
-    this.minionHandler = new MinionHandler();
+    this.minionHandler = new MinionHandler(this.minionTypes);
     this.towerHandler = new TowerHandler(this.towerTypes);
   }
 
@@ -226,7 +227,7 @@ export class Game extends Component {
     this.state.hubConnection
       .invoke('sellTower', this.name, this.state.upgradingTower.id)
       .catch(err => console.error(err));
-      this.setState({ upgradingTower: undefined });
+    this.setState({ upgradingTower: undefined });
   }
 
   render() {

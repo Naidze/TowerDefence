@@ -22,14 +22,14 @@ namespace TDServer.Models.Minions
         public MoveType MoveType { get; set; }
         public Position Position { get; set; }
 
-        public Minion(string name)
+        public Minion(string name, int health, int speed, int reward)
         {
             Id = idCounter++;
             Name = name;
-            Reward = 10;
-            Health = 20;
+            Health = health;
             StartingHealth = Health;
-            MoveSpeed = 2;
+            MoveSpeed = speed;
+            Reward = reward;
             Position = new Position(GameUtils.map[0].X, GameUtils.map[0].Y);
         }
 

@@ -10,9 +10,17 @@ namespace TDServer.Models.Minions
 {
     public class Crawler : Minion
     {
-        public Crawler() : base("crawler")
+        public Crawler() : base("crawler", 20, 4, 15)
         {
-            Debug.WriteLine("Hi, I'm Crawler!");
+            
+        }
+
+        protected override void HandleCloned(Minion clone)
+        {
+            base.HandleCloned(clone);
+
+            Crawler obj = (Crawler)clone;
+            obj.Position = (Position)this.Position.Clone();
         }
 
         public bool Crawl()
