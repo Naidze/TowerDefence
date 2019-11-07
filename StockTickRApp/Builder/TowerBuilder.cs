@@ -9,52 +9,64 @@ namespace TDServer.Builder
 {
     public class TowerBuilder : ITowerBuilder
     {
-        private readonly Tower _tower;
+        private Position Position;
+        private string Name { get; set; }
+        private int Damage { get; set; }
+        private int Range { get; set; }
+        private int Rate { get; set; }
+        private int Price { get; set; }
 
         public TowerBuilder(Position position)
         {
-            _tower = new Tower(position);
+            Position = position;
         }
 
         public TowerBuilder SetName(string name)
         {
-            _tower.Name = name;
+            Name = name;
             return this;
         }
 
         public TowerBuilder SetPosition(Position position)
         {
-            _tower.Position = position;
+            Position = position;
             return this;
         }
 
         public TowerBuilder SetDamage(int damage)
         {
-            _tower.Damage = damage;
+            Damage = damage;
             return this;
         }
 
         public TowerBuilder SetRange(int range)
         {
-            _tower.Range = range;
+            Range = range;
             return this;
         }
 
         public TowerBuilder SetRate(int rate)
         {
-            _tower.Rate = rate;
+            Rate = rate;
             return this;
         }
 
         public TowerBuilder SetPrice(int price)
         {
-            _tower.Price = price;
+            Price = price;
             return this;
         }
 
         public Tower GetResult()
         {
-            return _tower;
+            return new Tower(Position)
+            {
+                Name = Name,
+                Damage = Damage,
+                Range = Range,
+                Rate = Rate,
+                Price = Price
+            };
         }
 
     }
