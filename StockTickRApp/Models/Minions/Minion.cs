@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TDServer.Enums;
+using TDServer.Helpers;
 
 namespace TDServer.Models.Minions
 {
@@ -27,7 +28,7 @@ namespace TDServer.Models.Minions
             Reward = 10;
             Health = 100;
             MoveSpeed = 1;
-            Position = new Position(Game.map[0].X, Game.map[0].Y);
+            Position = new Position(GameUtils.map[0].X, GameUtils.map[0].Y);
         }
 
         public override bool Equals(object obj)

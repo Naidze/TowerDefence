@@ -12,17 +12,6 @@ namespace TDServer
     public class Game
     {
 
-        public static readonly Path[] map = new Path[] {
-            new Path(0, 220),
-            new Path(100, 220),
-            new Path(100, 100),
-            new Path(220, 100),
-            new Path(220, 260),
-            new Path(380, 260),
-            new Path(380, 180),
-            new Path(590, 180)
-        };
-
         public Player[] players = new Player[GameUtils.PLAYER_COUNT];
 
         public Game(IHubContext<GameHub> hub)
@@ -71,33 +60,6 @@ namespace TDServer
             return null;
         }
 
-        public void ChangeAttackMode(string name, int towerId, string mode)
-        {
-            Player player = GetPlayer(name);
-            if (player == null)
-            {
-                return;
-            }
-
-            Tower tower = GetTower(player, towerId);
-            if (tower == null)
-            {
-                return;
-            }
-
-        }
-
-        private Tower GetTower(Player player, int towerId)
-        {
-            foreach (Tower tower in player.Towers)
-            {
-                if (tower.Id == towerId)
-                {
-                    return tower;
-                }
-            }
-            return null;
-        }
     }
 
 }

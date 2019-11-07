@@ -18,6 +18,7 @@ namespace GameClient.Decorator
             Rate = attacker.Rate;
             Position = attacker.Position;
             Price = attacker.Price;
+            AttackMode = attacker.AttackMode;
             _attacker = attacker;
         }
     }

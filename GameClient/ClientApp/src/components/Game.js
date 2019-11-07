@@ -5,13 +5,14 @@ import MinionHandler from '../MinionHandler';
 import TowerHandler from '../TowerHandler';
 import { distance, distanceToLineSegment } from '../utils';
 import Tower from './Tower';
+import TowerUpgrades from './TowerUpgrades';
 
 export class Game extends Component {
 
   minTowerDistance = 45;
   minRoadDistance = 25;
 
-  towerTypes = [ "soldier", "archer" ];
+  towerTypes = ["soldier", "archer"];
 
   gameMap = undefined;
 
@@ -38,6 +39,7 @@ export class Game extends Component {
       wave: 1,
 
       selectedTower: undefined,
+      upgradingTower: undefined,
       placeable: undefined,
       mouseX: 0,
       mouseY: 0,
@@ -47,6 +49,7 @@ export class Game extends Component {
     this.handleCanvasMouseMove = this.handleCanvasMouseMove.bind(this);
     this.handleCanvasMouseLeave = this.handleCanvasMouseLeave.bind(this);
     this.handleCanvasClick = this.handleCanvasClick.bind(this);
+    this.changeAttackMode = this.changeAttackMode.bind(this);
   }
 
   componentDidMount() {
@@ -176,8 +179,15 @@ export class Game extends Component {
         .catch(err => console.error(err));
     }
 
+    if (this.state.upgradingTower) {
+      this.setState({ upgradingTower: null })
+    }
+
     if (!this.state.selectedTower) {
-      console.log(this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers))
+      var clickedTower = this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers);
+      if (clickedTower) {
+        this.setState({ upgradingTower: clickedTower })
+      }
     }
   }
 
@@ -191,11 +201,16 @@ export class Game extends Component {
     this.setState({ selectedTower: undefined });
   }
 
+  changeAttackMode(mode) {
+    this.state.hubConnection
+    .invoke('changeAttackMode', this.name, this.state.upgradingTower.id, mode)
+    .catch(err => console.error(err));
+  }
+
   render() {
-    var towers = this.towerTypes.map(type => 
+    var towers = this.towerTypes.map(type =>
       <Tower name={type} click={this.selectTower} key={type} />
     );
-
     return (
       <div>
         {!this.state.started && <h1 className="mb-1">Waiting for players..</h1>}
@@ -207,7 +222,7 @@ export class Game extends Component {
                 <p>{this.player.health}❤️   {this.player.money}💰</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
-                  {towers}
+                  {this.state.upgradingTower ? <TowerUpgrades changeAttackMode={this.changeAttackMode} /> : towers}
                 </div>
               </div>
               <div>

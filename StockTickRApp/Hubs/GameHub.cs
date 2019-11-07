@@ -4,6 +4,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using TDServer.Facade;
+using TDServer.Helpers;
 
 namespace TDServer.Hubs
 {
@@ -50,7 +51,7 @@ namespace TDServer.Hubs
         }
 
         public void AskForMap() {
-            Clients.Caller.SendAsync("getMap", Game.map);
+            Clients.Caller.SendAsync("getMap", GameUtils.map);
         }
 
         public void PlaceTower(string name, string towerName, int x, int y)
@@ -58,9 +59,9 @@ namespace TDServer.Hubs
             _towerManager.PlaceTower(name, towerName, x, y);
         }
 
-        public void ChangeAttackMode(string name, int towerId, string mode)
+        public void ChangeAttackMode(string name, string towerId, string mode)
         {
-            _game.ChangeAttackMode(name, towerId, mode);
+            _towerManager.ChangeAttackMode(name, towerId, mode);
         }
     }
 }

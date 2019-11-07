@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDServer.Strategy;
 
 namespace TDServer.Models.Towers
 {
@@ -12,6 +13,7 @@ namespace TDServer.Models.Towers
         public int Id { get; set; }
         public string Name { get; set; }
         public Position Position { get; set; }
+        public ISelectMinion AttackMode { get; set; }
         public int Range { get; set; }
         public int Damage { get; set; }
         public int Rate { get; set; }

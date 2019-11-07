@@ -8,6 +8,7 @@ using TDServer.Helpers;
 using TDServer.Models;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
+using TDServer.Strategy;
 
 namespace TDServer.Facade
 {
@@ -51,7 +52,7 @@ namespace TDServer.Facade
                         continue;
                     }
 
-                    Minion minion = FindClosestMinion(tower, _game.players[i].Minions);
+                    Minion minion = tower.AttackMode.SelectEnemy(_game.players[i].Minions);
                     if (minion == null)
                     {
                         continue;
@@ -72,20 +73,50 @@ namespace TDServer.Facade
             }
         }
 
-        private Minion FindClosestMinion(EnemyAttacker tower, List<Minion> minions)
+        public void ChangeAttackMode(string name, string towerId, string mode)
         {
-            double closestDistance = double.MaxValue;
-            Minion closest = null;
-            foreach (Minion minion in minions)
+            Player player = _game.GetPlayer(name);
+            if (player == null)
             {
-                double distance = GameUtils.CalculateDistance(tower.Position, minion.Position);
-                if (distance < tower.Range && distance < closestDistance)
+                return;
+            }
+
+            EnemyAttacker tower = GetTower(player, int.Parse(towerId));
+            if (tower == null)
+            {
+                return;
+            }
+
+            Enum.TryParse(mode.ToUpper(), out AttackMode attackMode);
+            switch (attackMode)
+            {
+                case AttackMode.CLOSEST:
+                    tower.AttackMode = new SelectClosestMinion(tower);
+                    return;
+                case AttackMode.FURTHEST:
+                    tower.AttackMode = new SelectFurthestMinion(tower);
+                    return;
+                case AttackMode.WEAKEST:
+                    tower.AttackMode = new SelectWeakestMinion(tower);
+                    return;
+                case AttackMode.STRONGEST:
+                    tower.AttackMode = new SelectStrongestMinion(tower);
+                    return;
+                default:
+                    return;
+            }
+        }
+
+        private EnemyAttacker GetTower(Player player, int towerId)
+        {
+            foreach (EnemyAttacker tower in player.Towers)
+            {
+                if (tower.Id == towerId)
                 {
-                    closestDistance = distance;
-                    closest = minion;
+                    return tower;
                 }
             }
-            return closest;
+            return null;
         }
     }
 }

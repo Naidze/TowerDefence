@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using TDServer.Command;
+using TDServer.Helpers;
 
 namespace TDServer.Models.Minions
 {
@@ -24,12 +25,12 @@ namespace TDServer.Models.Minions
 
         public bool Move()
         {
-            if (Position.Path == Game.map.Length)
+            if (Position.Path == GameUtils.map.Length)
             {
                 return false;
             }
 
-            var path = Game.map[Position.Path];
+            var path = GameUtils.map[Position.Path];
             if (Position.X > path.X)
             {
                 Position.X = Math.Max(new Left(this).Execute(), path.X);
@@ -51,7 +52,7 @@ namespace TDServer.Models.Minions
             {
                 Position.Path++;
             }
-            return Position.Path < Game.map.Length;
+            return Position.Path < GameUtils.map.Length;
         }
     }
 }
