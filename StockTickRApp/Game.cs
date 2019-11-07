@@ -13,9 +13,6 @@ namespace TDServer
     public class Game
     {
 
-        private readonly TowerManager _towerManager;
-        private readonly MinionManager _minionManager;
-
         public Player[] players = new Player[GameUtils.PLAYER_COUNT];
         public bool gameStarted = false;
         public int wave;
@@ -24,26 +21,15 @@ namespace TDServer
         public int ticksBeforeSpawn;
         public UnitFactory unitFactory;
 
-        public Game(IHubContext<GameHub> hub, TowerManager towerManager, MinionManager minionManager)
+        public Game(IHubContext<GameHub> hub)
         {
             Hub = hub;
-            _towerManager = towerManager;
-            _minionManager = minionManager;
         }
 
         public IHubContext<GameHub> Hub
         {
             get;
             set;
-        }
-
-
-        public void Tick()
-        {
-            _minionManager.SpawnMinions();
-            _minionManager.MoveMinions();
-            _towerManager.FireTowers();
-            Hub.Clients.All.SendAsync("tick", wave, players);
         }
 
         public void ChangeName(string connectionId, string name)
