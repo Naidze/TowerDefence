@@ -10,8 +10,8 @@ namespace TDServer.Models
     public class Player
     {
 
-        private static readonly int STARTING_HEALTH = 20;
-        private static readonly int STARTING_MONEY = 200;
+        public const int STARTING_HEALTH = 20;
+        public const int STARTING_MONEY = 200;
 
         public string Id { get; set; }
         public string Name { get; set; }
