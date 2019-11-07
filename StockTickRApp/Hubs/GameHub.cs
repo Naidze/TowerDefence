@@ -63,5 +63,16 @@ namespace TDServer.Hubs
         {
             _towerManager.ChangeAttackMode(name, towerId, mode);
         }
+
+        public void UpgradeTower(string name, string towerId, string type)
+        {
+            _towerManager.UpgradeTower(name, towerId, type);
+        }
+
+        public void SellTower(string name, string towerId)
+        {
+            _towerManager.SellTower(name, towerId);
+
+        }
     }
 }

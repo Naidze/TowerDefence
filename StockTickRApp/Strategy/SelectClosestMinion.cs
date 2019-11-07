@@ -11,23 +11,16 @@ namespace TDServer.Strategy
     public class SelectClosestMinion : ISelectMinion
     {
 
-        private readonly EnemyAttacker Tower;
-
-        public SelectClosestMinion(EnemyAttacker tower)
-        {
-            Tower = tower;
-        }
-
         public string Name => "closest";
 
-        public Minion SelectEnemy( List<Minion> minions)
+        public Minion SelectEnemy(EnemyAttacker tower, List<Minion> minions)
         {
             double closestDistance = double.MaxValue;
             Minion closest = null;
             foreach (Minion minion in minions)
             {
-                double distance = GameUtils.CalculateDistance(Tower.Position, minion.Position);
-                if (distance < Tower.Range && distance < closestDistance)
+                double distance = GameUtils.CalculateDistance(tower.Position, minion.Position);
+                if (distance < tower.Range && distance < closestDistance)
                 {
                     closestDistance = distance;
                     closest = minion;

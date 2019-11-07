@@ -12,6 +12,12 @@ namespace TDServer.Decorator
         public LongRange(EnemyAttacker attacker) : base(attacker)
         {
             Range = _attacker.Range + 10;
+            string upgrade = "range";
+            if (!attacker.Upgrades.ContainsKey(upgrade))
+            {
+                attacker.Upgrades.Add(upgrade, 0);
+            }
+            attacker.Upgrades[upgrade]++;
         }
     }
 }

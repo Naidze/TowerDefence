@@ -50,6 +50,8 @@ export class Game extends Component {
     this.handleCanvasMouseLeave = this.handleCanvasMouseLeave.bind(this);
     this.handleCanvasClick = this.handleCanvasClick.bind(this);
     this.changeAttackMode = this.changeAttackMode.bind(this);
+    this.upgrade = this.upgrade.bind(this);
+    this.sell = this.sell.bind(this);
   }
 
   componentDidMount() {
@@ -139,6 +141,7 @@ export class Game extends Component {
 
     if (this.state.upgradingTower) {
       var upgradingTower = this.player.towers.filter(tower => tower.id === this.state.upgradingTower.id)[0];
+      console.log(upgradingTower);
       this.setState({ upgradingTower });
     }
   }
@@ -191,7 +194,6 @@ export class Game extends Component {
     if (!this.state.selectedTower) {
       var clickedTower = this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers);
       if (clickedTower) {
-        console.log(clickedTower)
         this.setState({ upgradingTower: clickedTower })
       }
     }
@@ -213,6 +215,18 @@ export class Game extends Component {
       .catch(err => console.error(err));
   }
 
+  upgrade(type) {
+    this.state.hubConnection
+      .invoke('upgradeTower', this.name, this.state.upgradingTower.id, type)
+      .catch(err => console.error(err));
+  }
+
+  sell() {
+    this.state.hubConnection
+      .invoke('sellTower', this.name, this.state.upgradingTower.id)
+      .catch(err => console.error(err));
+  }
+
   render() {
     var towers = this.towerTypes.map(type =>
       <Tower name={type} click={this.selectTower} key={type} />
@@ -228,7 +242,9 @@ export class Game extends Component {
                 <p>{this.player.health}❤️   {this.player.money}💰</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
-                  {this.state.upgradingTower ? <TowerUpgrades tower={this.state.upgradingTower} changeAttackMode={this.changeAttackMode} /> : towers}
+                  {this.state.upgradingTower ?
+                    <TowerUpgrades tower={this.state.upgradingTower} changeAttackMode={this.changeAttackMode} upgrade={this.upgrade} sell={this.sell} />
+                    : towers}
                 </div>
               </div>
               <div>

@@ -12,7 +12,8 @@ namespace TDServer.Models.Towers
         {
             Id = idCounter++;
             Position = position;
-            AttackMode = new SelectClosestMinion(this);
+            AttackMode = new SelectClosestMinion();
+            Upgrades = new Dictionary<string, int>();
             TicksBeforeShot = 0;
         }
 

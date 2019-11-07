@@ -107,7 +107,7 @@ namespace TDServer
             }
             catch
             {
-                throw;
+                return;
             }
         }
 

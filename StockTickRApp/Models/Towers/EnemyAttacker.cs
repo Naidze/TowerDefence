@@ -15,12 +15,21 @@ namespace TDServer.Models.Towers
         public string Name { get; set; }
         public Position Position { get; set; }
         public ISelectMinion AttackMode { get; set; }
-        public Dictionary<TowerDecorator, int> Upgrades { get; set; }
+        public Dictionary<string, int> Upgrades { get; set; }
         public int Range { get; set; }
         public int Damage { get; set; }
         public int Rate { get; set; }
         public int Price { get; set; }
         public int TicksBeforeShot { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is EnemyAttacker attacker))
+            {
+                return false;
+            }
+            return Id.Equals(attacker.Id);
+        }
 
     }
 }

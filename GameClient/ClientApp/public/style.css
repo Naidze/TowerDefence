@@ -15,8 +15,8 @@ canvas {
 .PlayerSpace__GameMenu {
     border: 1px solid black;
     background: #C0C0C0;
-    height: 60px;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 }
 

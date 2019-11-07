@@ -12,6 +12,12 @@ namespace TDServer.Decorator
         public HighRate(EnemyAttacker attacker) : base(attacker)
         {
             Rate = _attacker.Rate + 10;
+            string upgrade = "rate";
+            if (!attacker.Upgrades.ContainsKey(upgrade))
+            {
+                attacker.Upgrades.Add(upgrade, 0);
+            }
+            attacker.Upgrades[upgrade]++;
         }
     }
 }

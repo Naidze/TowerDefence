@@ -12,6 +12,7 @@ namespace GameClient.Decorator
 
         public TowerDecorator(EnemyAttacker attacker)
         {
+            Id = attacker.Id;
             Name = attacker.Name;
             Damage = attacker.Damage;
             Range = attacker.Range;
@@ -19,6 +20,8 @@ namespace GameClient.Decorator
             Position = attacker.Position;
             Price = attacker.Price;
             AttackMode = attacker.AttackMode;
+            Upgrades = attacker.Upgrades;
+            TicksBeforeShot = attacker.TicksBeforeShot;
             _attacker = attacker;
         }
     }

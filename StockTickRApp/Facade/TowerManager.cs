@@ -54,7 +54,7 @@ namespace TDServer.Facade
                         continue;
                     }
 
-                    Minion minion = tower.AttackMode.SelectEnemy(_game.players[i].Minions);
+                    Minion minion = tower.AttackMode.SelectEnemy(tower, _game.players[i].Minions);
                     if (minion == null)
                     {
                         continue;
@@ -93,20 +93,70 @@ namespace TDServer.Facade
             switch (attackMode)
             {
                 case AttackMode.CLOSEST:
-                    tower.AttackMode = new SelectClosestMinion(tower);
+                    tower.AttackMode = new SelectClosestMinion();
                     return;
                 case AttackMode.FURTHEST:
-                    tower.AttackMode = new SelectFurthestMinion(tower);
+                    tower.AttackMode = new SelectFurthestMinion();
                     return;
                 case AttackMode.WEAKEST:
-                    tower.AttackMode = new SelectWeakestMinion(tower);
+                    tower.AttackMode = new SelectWeakestMinion();
                     return;
                 case AttackMode.STRONGEST:
-                    tower.AttackMode = new SelectStrongestMinion(tower);
+                    tower.AttackMode = new SelectStrongestMinion();
                     return;
                 default:
                     return;
             }
+        }
+
+        public void UpgradeTower(string name, string towerId, string type)
+        {
+            Player player = _game.GetPlayer(name);
+            if (player == null)
+            {
+                return;
+            }
+
+            int id = int.Parse(towerId);
+            EnemyAttacker tower = GetTower(player, id);
+            if (tower == null)
+            {
+                return;
+            }
+
+            switch (type)
+            {
+                case "damage":
+                    UpdateTower(player, id, new HighDamage(tower));
+                    return;
+                case "rate":
+                    UpdateTower(player, id, new HighRate(tower));
+                    return;
+                case "range":
+                    UpdateTower(player, id, new LongRange(tower));
+                    return;
+                default:
+                    return;
+            }
+
+        }
+
+        public void SellTower(string name, string towerId)
+        {
+            Player player = _game.GetPlayer(name);
+            if (player == null)
+            {
+                return;
+            }
+
+            int id = int.Parse(towerId);
+            EnemyAttacker tower = GetTower(player, id);
+            if (tower == null)
+            {
+                return;
+            }
+
+            player.Towers.Remove(tower);
         }
 
         private EnemyAttacker GetTower(Player player, int towerId)
@@ -119,6 +169,17 @@ namespace TDServer.Facade
                 }
             }
             return null;
+        }
+
+        private void UpdateTower(Player player, int towerId, EnemyAttacker tower)
+        {
+            for (int i = 0; i < player.Towers.Count; i++)
+            {
+                if (player.Towers[i].Id == towerId)
+                { 
+                    player.Towers[i] = tower;
+                }
+            }
         }
     }
 }

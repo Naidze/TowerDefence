@@ -10,6 +10,6 @@ namespace TDServer.Strategy
     public interface ISelectMinion
     {
         string Name { get; }
-        Minion SelectEnemy(List<Minion> minions);
+        Minion SelectEnemy(EnemyAttacker tower, List<Minion> minions);
     }
 }
