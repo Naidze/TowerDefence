@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GameClient", "GameClient\GameClient.csproj", "{C1998E6A-693A-495F-B42C-49DD76D08FB5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDServer", "StockTickRApp\TDServer.csproj", "{58B5C6C8-1F95-432B-86CC-E861C51C602A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TDServer", "TDServer\TDServer.csproj", "{58B5C6C8-1F95-432B-86CC-E861C51C602A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
