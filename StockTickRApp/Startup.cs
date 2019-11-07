@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using TDServer.Facade;
 
 namespace TDServer
 {
@@ -20,6 +21,11 @@ namespace TDServer
             }));
             services.AddSignalR();
             services.AddSingleton<Game>();
+
+            services.AddScoped<GameStarter>();
+            services.AddScoped<GameStopper>();
+            services.AddScoped<TowerManager>();
+            services.AddScoped<MinionManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

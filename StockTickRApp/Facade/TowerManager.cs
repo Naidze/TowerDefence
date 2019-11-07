@@ -14,9 +14,9 @@ namespace TDServer.Facade
 {
     public class TowerManager
     {
-        private readonly Game _game;
+        private readonly TDServer.Game _game;
 
-        public TowerManager(Game game)
+        public TowerManager(TDServer.Game game)
         {
             _game = game;
         }

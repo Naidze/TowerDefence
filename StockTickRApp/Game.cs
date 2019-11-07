@@ -6,17 +6,29 @@ using TDServer.Factory;
 using System.Diagnostics;
 using TDServer.Helpers;
 using TDServer.Models.Towers;
+using TDServer.Facade;
 
 namespace TDServer
 {
     public class Game
     {
 
-        public Player[] players = new Player[GameUtils.PLAYER_COUNT];
+        private readonly TowerManager _towerManager;
+        private readonly MinionManager _minionManager;
 
-        public Game(IHubContext<GameHub> hub)
+        public Player[] players = new Player[GameUtils.PLAYER_COUNT];
+        public bool gameStarted = false;
+        public int wave;
+        public Timer gameLoop;
+        public int leftToSpawn;
+        public int ticksBeforeSpawn;
+        public UnitFactory unitFactory;
+
+        public Game(IHubContext<GameHub> hub, TowerManager towerManager, MinionManager minionManager)
         {
             Hub = hub;
+            _towerManager = towerManager;
+            _minionManager = minionManager;
         }
 
         public IHubContext<GameHub> Hub
@@ -25,13 +37,14 @@ namespace TDServer
             set;
         }
 
-        public UnitFactory unitFactory;
 
-        public bool gameStarted = false;
-        public int wave;
-        public Timer gameLoop;
-        public int leftToSpawn;
-        public int ticksBeforeSpawn;
+        public void Tick()
+        {
+            _minionManager.SpawnMinions();
+            _minionManager.MoveMinions();
+            _towerManager.FireTowers();
+            Hub.Clients.All.SendAsync("tick", wave, players);
+        }
 
         public void ChangeName(string connectionId, string name)
         {
@@ -59,7 +72,5 @@ namespace TDServer
             }
             return null;
         }
-
     }
-
 }

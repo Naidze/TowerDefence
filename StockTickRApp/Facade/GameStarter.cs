@@ -13,13 +13,11 @@ namespace TDServer.Facade
 {
     public class GameStarter
     {
-        private readonly Game _game;
-        private readonly GameManager _gameManager;
+        private readonly TDServer.Game _game;
 
-        public GameStarter(Game game, GameManager gameManager)
+        public GameStarter(TDServer.Game game)
         {
             _game = game;
-            _gameManager = gameManager;
         }
 
         public bool AddPlayer(string connectionId)
@@ -77,7 +75,7 @@ namespace TDServer.Facade
             Logger.GetInstance().Info("Game is starting!");
             _game.Hub.Clients.All.SendAsync("gameStarting");
             _game.gameLoop = new System.Threading.Timer(
-                e => _gameManager.Tick(),
+                e => _game.Tick(),
                 null,
                 TimeSpan.Zero,
             TimeSpan.FromMilliseconds(GameUtils.TICK_INTERVAL));
