@@ -31,14 +31,16 @@ namespace TDServer.Facade
 
             Enum.TryParse(towerName.ToUpper(), out TowerType type);
             Tower tower = _game.unitFactory.CreateTower(type, new Position(x, y));
-            EnemyAttacker attacker = new HighDamage(new HighRate(new LongRange(tower)));
+            //EnemyAttacker attacker = new HighDamage(new HighRate(new LongRange(tower)));
 
             if (player.Money < tower.Price)
             {
                 return;
             }
-            player.Money -= attacker.Price;
-            player.Towers.Add(attacker);
+            //player.Money -= attacker.Price;
+            //player.Towers.Add(attacker);
+            player.Money -= tower.Price;
+            player.Towers.Add(tower);
         }
 
         public void FireTowers()

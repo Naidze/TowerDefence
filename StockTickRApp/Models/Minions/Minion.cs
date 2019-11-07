@@ -16,6 +16,7 @@ namespace TDServer.Models.Minions
         public int Id { get; set; }
         public string Name { get; set; }
         public int Health { get; set; }
+        public int StartingHealth { get; set; }
         public int MoveSpeed { get; set; }
         public int Reward { get; set; }
         public MoveType MoveType { get; set; }
@@ -26,8 +27,9 @@ namespace TDServer.Models.Minions
             Id = idCounter++;
             Name = name;
             Reward = 10;
-            Health = 100;
-            MoveSpeed = 1;
+            Health = 20;
+            StartingHealth = Health;
+            MoveSpeed = 2;
             Position = new Position(GameUtils.map[0].X, GameUtils.map[0].Y);
         }
 
@@ -45,11 +47,16 @@ namespace TDServer.Models.Minions
             return Id.GetHashCode();
         }
 
-        public object Clone()
+        public Minion Clone()
         {
             var clone = (Minion)this.MemberwiseClone();
             HandleCloned(clone);
             return clone;
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
         }
 
         public int MoveUp()

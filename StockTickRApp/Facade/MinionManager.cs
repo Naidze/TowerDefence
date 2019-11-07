@@ -43,7 +43,7 @@ namespace TDServer.Facade
             _game.leftToSpawn--;
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
             {
-                _game.players[i].Minions.Add(minion);
+                _game.players[i].Minions.Add(minion.Clone());
                 //if (players[i].Health > 0)
                 //{
                 //    players[i].Minions.Add(minion);

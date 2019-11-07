@@ -33,16 +33,16 @@ namespace TDServer.Factory
                 case TowerType.SOLDIER:
                     return new TowerBuilder(position)
                         .SetName(type.ToString().ToLower())
-                        .SetRate(1)
-                        .SetDamage(20)
-                        .SetRange(30)
+                        .SetRate(2)
+                        .SetDamage(10)
+                        .SetRange(80)
                         .SetPrice(50)
                         .GetResult();
                 case TowerType.ARCHER:
                     return new TowerBuilder(position)
                         .SetName(type.ToString().ToLower())
                         .SetRate(10)
-                        .SetDamage(5)
+                        .SetDamage(3)
                         .SetRange(50)
                         .SetPrice(30)
                         .GetResult();
