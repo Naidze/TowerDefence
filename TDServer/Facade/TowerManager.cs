@@ -9,14 +9,15 @@ using TDServer.Models;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
 using TDServer.Strategy;
+using TDServer.Template;
 
 namespace TDServer.Facade
 {
     public class TowerManager
     {
-        private readonly TDServer.Game _game;
+        private readonly Game _game;
 
-        public TowerManager(TDServer.Game game)
+        public TowerManager(Game game)
         {
             _game = game;
         }
@@ -32,6 +33,7 @@ namespace TDServer.Facade
             Enum.TryParse(towerName.ToUpper(), out TowerType type);
             Tower tower = _game.unitFactory.CreateTower(type, new Position(x, y));
             //EnemyAttacker attacker = new HighDamage(new HighRate(new LongRange(tower)));
+            EnemyAttacker attacker = new HighRateConveyor().BuildTower(new Position(x, y));
 
             if (player.Money < tower.Price)
             {
