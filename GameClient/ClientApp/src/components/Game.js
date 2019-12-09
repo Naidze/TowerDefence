@@ -6,6 +6,7 @@ import TowerHandler from '../TowerHandler';
 import { distance, distanceToLineSegment } from '../utils';
 import Tower from './Tower';
 import TowerUpgrades from './TowerUpgrades';
+import MinionFactory from '../flyweight/MinionFactory';
 
 export class Game extends Component {
 
@@ -22,7 +23,7 @@ export class Game extends Component {
   opponentCanvas = undefined;
   opponentContext = undefined;
 
-  minionHandler = undefined;
+  minionFactory = undefined;
   towerHandler = undefined;
 
   name = '';
@@ -102,10 +103,6 @@ export class Game extends Component {
         this.setState({ started: false });
       });
 
-      this.state.hubConnection.on('spawnMinion', (id, type) => {
-        this.minionHandler.spawn(id, type);
-      });
-
       this.state.hubConnection.on('tick', (wave, gameState) => {
         this.setState({ wave });
         this.player = gameState.filter(user => user.id === this.id)[0];
@@ -123,6 +120,7 @@ export class Game extends Component {
     this.opponentCanvas = document.querySelector('.opponentCanvas');
     this.opponentContext = this.opponentCanvas.getContext('2d');
 
+    this.minionFactory = new MinionFactory();
     this.minionHandler = new MinionHandler(this.minionTypes);
     this.towerHandler = new TowerHandler(this.towerTypes);
   }
@@ -149,7 +147,9 @@ export class Game extends Component {
 
   handleState(canvas, context, state) {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    this.minionHandler.render(context, state.minions);
+    state.minions.forEach(minion => {
+      this.minionFactory.getMinion(minion.name).draw(context, minion.position.x, minion.position.y, minion.startingHealth, minion.health)
+    })
     this.towerHandler.render(context, state.towers);
   }
 
