@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using TDServer.Decorator;
 using TDServer.Enums;
 using TDServer.Helpers;
+using TDServer.Iterator;
 using TDServer.Models;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
@@ -42,14 +43,16 @@ namespace TDServer.Facade
             //player.Money -= attacker.Price;
             //player.Towers.Add(attacker);
             player.Money -= tower.Price;
-            player.Towers.Add(tower);
+            int towerCount = player.Towers.Count;
+            player.Towers[towerCount] = tower;
         }
 
         public void FireTowers()
         {
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
             {
-                foreach (EnemyAttacker tower in _game.players[i].Towers)
+                ITowerIterator iterator = _game.players[i].Towers.CreateIterator();
+                for (Tower tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
                 {
                     if (tower.TicksBeforeShot-- > 0)
                     {
@@ -158,12 +161,13 @@ namespace TDServer.Facade
                 return;
             }
 
-            player.Towers.Remove(tower);
+            player.Towers.Remove(tower as Tower);
         }
 
         private EnemyAttacker GetTower(Player player, int towerId)
         {
-            foreach (EnemyAttacker tower in player.Towers)
+            ITowerIterator iterator = player.Towers.CreateIterator();
+            for (Tower tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
             {
                 if (tower.Id == towerId)
                 {
@@ -173,13 +177,14 @@ namespace TDServer.Facade
             return null;
         }
 
-        private void UpdateTower(Player player, int towerId, EnemyAttacker tower)
+        private void UpdateTower(Player player, int towerId, EnemyAttacker attacker)
         {
-            for (int i = 0; i < player.Towers.Count; i++)
+            ITowerIterator iterator = player.Towers.CreateIterator();
+            for (Tower tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
             {
-                if (player.Towers[i].Id == towerId)
+                if (tower.Id == towerId)
                 { 
-                    player.Towers[i] = tower;
+                    tower = (attacker as Tower);
                 }
             }
         }

@@ -12,8 +12,8 @@ export default class TowerHandler {
         })
     }
 
-    render(context, towers) {
-        towers.forEach(tower => {
+    render(context, player) {
+        player.towers.forEach(tower => {
             this.paint(context, tower);
         });
     }
@@ -39,9 +39,9 @@ export default class TowerHandler {
         context.fill();
     }
 
-    getClickedTower(x, y, towers) {
+    getClickedTower(x, y, player) {
         var clickedTower = null;
-        towers.forEach(tower => {
+        player.towers.forEach(tower => {
             if (distance(x, y, tower.position.x, tower.position.y) < this.distanceForClick) {
                 clickedTower = tower;
             }

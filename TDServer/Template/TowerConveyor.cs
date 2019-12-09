@@ -11,6 +11,7 @@ namespace TDServer.Template
     {
         public sealed override EnemyAttacker BuildTower(Position position)
         {
+            base.BuildTower(position);
             if (NeedMoreRange())
             {
                 AddRange();

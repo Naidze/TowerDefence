@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TDServer.Factory;
 using TDServer.Helpers;
 using TDServer.Hubs;
+using TDServer.Iterator;
 using TDServer.Models;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
@@ -67,7 +68,7 @@ namespace TDServer.Facade
             foreach (Player player in _game.players)
             {
                 player.Minions = new List<Minion>();
-                player.Towers = new List<EnemyAttacker>();
+                player.Towers = new TowerCollection();
                 player.Health = Player.STARTING_HEALTH;
                 player.Money = Player.STARTING_MONEY;
             }

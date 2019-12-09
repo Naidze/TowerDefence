@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDServer.Iterator;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
 
@@ -18,7 +19,7 @@ namespace TDServer.Models
         public int Health { get; set; }
         public int Money { get; set; }
         public List<Minion> Minions { get; set; }
-        public List<EnemyAttacker> Towers { get; set; }
+        public TowerCollection Towers { get; set; }
 
         public Player(string id)
         {
@@ -26,7 +27,7 @@ namespace TDServer.Models
             Health = STARTING_HEALTH;
             Money = STARTING_MONEY;
             Minions = new List<Minion>();
-            Towers = new List<EnemyAttacker>();
+            Towers = new TowerCollection();
         }
     }
 }

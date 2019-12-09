@@ -163,7 +163,7 @@ export class Game extends Component {
 
   isPlaceable() {
     var placeable = true;
-    this.player.towers.forEach(tower => {
+    this.player.towers.towers.forEach(tower => {
       if (distance(this.state.mouseX, this.state.mouseY, tower.position.x, tower.position.y) < this.minTowerDistance) {
         placeable = false;
       }
