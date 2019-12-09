@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDServer.ChainOfResponsibility;
 using TDServer.Factory;
 using TDServer.Helpers;
 using TDServer.Hubs;
@@ -17,6 +18,7 @@ namespace TDServer.Facade
     {
         private readonly Game _game;
         private readonly Ticker _ticker;
+        private AbstractLogger logger = AbstractLogger.GetChainOfLoggers();
 
         public GameStarter(Game game, Ticker ticker)
         {
@@ -32,7 +34,7 @@ namespace TDServer.Facade
                 if (_game.players[i] == null)
                 {
                     _game.players[i] = new Player(connectionId);
-                    Logger.GetInstance().Info("Player " + (i + 1) + " has joined, id: " + connectionId);
+                    logger.LogMessage(LogLevel.INFO, "Player " + (i + 1) + " has joined, id: " + connectionId);
                     added = true;
                     break;
                 }
@@ -76,7 +78,7 @@ namespace TDServer.Facade
             _game.leftToSpawn = 0;
             _game.ticksBeforeSpawn = 0;
 
-            Logger.GetInstance().Info("Game is starting!");
+            logger.LogMessage(LogLevel.FILE, "Game is starting!");
             _game.Hub.Clients.All.SendAsync("gameStarting");
             _game.gameLoop = new System.Threading.Timer(
                 e => _ticker.Tick(),

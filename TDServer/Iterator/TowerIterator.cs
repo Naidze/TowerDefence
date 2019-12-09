@@ -8,26 +8,26 @@ namespace TDServer.Iterator
 {
     public class TowerIterator : ITowerIterator
     {
-        private TowerCollection _towers;
+        private readonly TowerCollection _towers;
         private int _current = 0;
-        private int _step = 1;
+        private readonly int _step = 1;
 
         public TowerIterator(TowerCollection towers)
         {
             _towers = towers;
         }
 
-        public Tower CurrentTower
+        public EnemyAttacker CurrentTower
         {
             get { return _towers[_current] as Tower; }
         }
 
-        public Tower First()
+        public EnemyAttacker First()
         {
             _current = 0;
             if (_towers.Count == 0)
                 return null;
-            return _towers[_current] as Tower;
+            return _towers[_current];
         }
 
         public bool IsDone
@@ -35,11 +35,11 @@ namespace TDServer.Iterator
             get { return _current >= _towers.Count; }
         }
 
-        public Tower Next()
+        public EnemyAttacker Next()
         {
             _current += _step;
             if (!IsDone)
-                return _towers[_current] as Tower;
+                return _towers[_current];
             else
                 return null;
         }

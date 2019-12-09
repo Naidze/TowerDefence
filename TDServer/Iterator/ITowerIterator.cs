@@ -8,9 +8,9 @@ namespace TDServer.Iterator
 {
     public interface ITowerIterator
     {
-        Tower First();
-        Tower Next();
+        EnemyAttacker First();
+        EnemyAttacker Next();
         bool IsDone { get; }
-        Tower CurrentTower { get; }
+        EnemyAttacker CurrentTower { get; }
     }
 }

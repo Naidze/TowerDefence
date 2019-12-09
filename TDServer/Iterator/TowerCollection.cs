@@ -9,32 +9,37 @@ namespace TDServer.Iterator
 {
     public class TowerCollection : ITowerCollection
     {
-        private ArrayList _towers = new ArrayList();
-
         public ITowerIterator CreateIterator()
         {
             return new TowerIterator(this);
         }
 
-        public ArrayList Towers
-        {
-            get { return _towers; }
-        }
+        public List<EnemyAttacker> Towers { get; } = new List<EnemyAttacker>();
 
         public int Count
         {
-            get { return _towers.Count; }
+            get { return Towers.Count; }
         }
 
-        public object this[int index]
+        public EnemyAttacker this[int index]
         {
-            get { return _towers[index]; }
-            set { _towers.Add(value);  }
+            get { return Towers[index]; }
+            set
+            {
+                if (Count > index && Count > 0)
+                {
+                    Towers[index] = value;
+                }
+                else
+                {
+                    Towers.Add(value);
+                }
+            }
         }
 
-        public void Remove(Tower tower)
+        public void Remove(EnemyAttacker tower)
         {
-            _towers.Remove(tower);
+            Towers.Remove(tower);
         }
     }
 }

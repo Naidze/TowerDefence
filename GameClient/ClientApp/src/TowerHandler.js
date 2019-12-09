@@ -39,9 +39,9 @@ export default class TowerHandler {
         context.fill();
     }
 
-    getClickedTower(x, y, player) {
+    getClickedTower(x, y, towers) {
         var clickedTower = null;
-        player.towers.forEach(tower => {
+        towers.forEach(tower => {
             if (distance(x, y, tower.position.x, tower.position.y) < this.distanceForClick) {
                 clickedTower = tower;
             }

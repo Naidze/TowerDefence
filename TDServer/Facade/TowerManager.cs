@@ -52,7 +52,7 @@ namespace TDServer.Facade
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
             {
                 ITowerIterator iterator = _game.players[i].Towers.CreateIterator();
-                for (Tower tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
+                for (EnemyAttacker tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
                 {
                     if (tower.TicksBeforeShot-- > 0)
                     {
@@ -161,13 +161,13 @@ namespace TDServer.Facade
                 return;
             }
 
-            player.Towers.Remove(tower as Tower);
+            player.Towers.Remove(tower);
         }
 
         private EnemyAttacker GetTower(Player player, int towerId)
         {
             ITowerIterator iterator = player.Towers.CreateIterator();
-            for (Tower tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
+            for (EnemyAttacker tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
             {
                 if (tower.Id == towerId)
                 {
@@ -179,12 +179,11 @@ namespace TDServer.Facade
 
         private void UpdateTower(Player player, int towerId, EnemyAttacker attacker)
         {
-            ITowerIterator iterator = player.Towers.CreateIterator();
-            for (Tower tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
+            for (int i = 0; i < player.Towers.Count; i++)
             {
-                if (tower.Id == towerId)
-                { 
-                    tower = (attacker as Tower);
+                if (player.Towers[i].Id == towerId)
+                {
+                    player.Towers[i] = attacker;
                 }
             }
         }

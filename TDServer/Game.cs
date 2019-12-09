@@ -7,6 +7,7 @@ using System.Diagnostics;
 using TDServer.Helpers;
 using TDServer.Models.Towers;
 using TDServer.Facade;
+using TDServer.ChainOfResponsibility;
 
 namespace TDServer
 {
@@ -20,6 +21,7 @@ namespace TDServer
         public int leftToSpawn;
         public int ticksBeforeSpawn;
         public UnitFactory unitFactory;
+        private AbstractLogger logger = AbstractLogger.GetChainOfLoggers();
 
         public Game(IHubContext<GameHub> hub)
         {
@@ -41,7 +43,7 @@ namespace TDServer
                 if (players[i] != null && players[i].Id == connectionId)
                 {
                     players[i].Name = name;
-                    Logger.GetInstance().Info("Set player " + (i + 1) + " name to: " + name);
+                    logger.LogMessage(LogLevel.DEBUG, "Set player " + (i + 1) + " name to: " + name);
                     break;
                 }
             }

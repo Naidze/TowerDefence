@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDServer.ChainOfResponsibility;
 using TDServer.Helpers;
 
 namespace TDServer.Facade
@@ -10,6 +11,7 @@ namespace TDServer.Facade
     public class GameStopper
     {
         private readonly Game _game;
+        private readonly AbstractLogger logger = AbstractLogger.GetChainOfLoggers();
 
         public GameStopper(Game game)
         {
@@ -27,7 +29,7 @@ namespace TDServer.Facade
                 if (_game.players[i] != null && _game.players[i].Id == connectionId)
                 {
                     _game.players[i] = null;
-                    Logger.GetInstance().Info("Player " + (i + 1) + " has left, id: " + connectionId);
+                    logger.LogMessage(LogLevel.FILE, "Player " + (i + 1) + " has left, id: " + connectionId);
                     break;
                 }
             }

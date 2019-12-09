@@ -141,7 +141,7 @@ export class Game extends Component {
     }
 
     if (this.state.upgradingTower) {
-      var upgradingTower = this.player.towers.filter(tower => tower.id === this.state.upgradingTower.id)[0];
+      var upgradingTower = this.player.towers.towers.filter(tower => tower.id === this.state.upgradingTower.id)[0];
       this.towerHandler.highlightTower(this.playerContext, upgradingTower);
       this.setState({ upgradingTower });
     }
@@ -194,7 +194,7 @@ export class Game extends Component {
     }
 
     if (!this.state.selectedTower) {
-      var clickedTower = this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers);
+      var clickedTower = this.towerHandler.getClickedTower(event.nativeEvent.offsetX, event.nativeEvent.offsetY, this.player.towers.towers);
       if (clickedTower) {
         this.setState({ upgradingTower: clickedTower })
       }
