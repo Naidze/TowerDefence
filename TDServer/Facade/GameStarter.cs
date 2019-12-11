@@ -18,7 +18,7 @@ namespace TDServer.Facade
     {
         private readonly Game _game;
         private readonly Ticker _ticker;
-        private AbstractLogger logger = AbstractLogger.GetChainOfLoggers();
+        private readonly AbstractLogger logger = AbstractLogger.GetChainOfLoggers();
 
         public GameStarter(Game game, Ticker ticker)
         {

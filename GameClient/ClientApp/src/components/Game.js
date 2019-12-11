@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
-import MinionHandler from '../MinionHandler';
+// import MinionHandler from '../MinionHandler';
 import TowerHandler from '../TowerHandler';
 import { distance, distanceToLineSegment } from '../utils';
 import Tower from './Tower';
@@ -103,8 +103,12 @@ export class Game extends Component {
         this.setState({ started: false });
       });
 
-      this.state.hubConnection.on('tick', (wave, gameState) => {
+      this.state.hubConnection.on('tick', (wave, gameState, minionsHolder) => {
         this.setState({ wave });
+        const noobs = minionsHolder['minionsList'].minionComponents[0].minionComponents[0];
+        const lizards = minionsHolder['minionsList'].minionComponents[0].minionComponents[1];
+        const crawlers = minionsHolder['minionsList'].minionComponents[1].minionComponents[0];
+        console.log(noobs, lizards, crawlers);
         this.player = gameState.filter(user => user.id === this.id)[0];
         this.opponent = gameState.filter(user => user.id !== this.id)[0];
         if (this.player && this.opponent) {
@@ -121,7 +125,7 @@ export class Game extends Component {
     this.opponentContext = this.opponentCanvas.getContext('2d');
 
     this.minionFactory = new MinionFactory();
-    this.minionHandler = new MinionHandler(this.minionTypes);
+    // this.minionHandler = new MinionHandler(this.minionTypes);
     this.towerHandler = new TowerHandler(this.towerTypes);
   }
 
