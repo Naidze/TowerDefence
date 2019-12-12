@@ -50,7 +50,7 @@ namespace TDServer.Facade
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(GameUtils.WAVE_INTERVAL);
-                    _game.Hub.Clients.All.SendAsync("notifyConsole", string.Format("Wave {0} starting now", _game.wave));
+                    _game.Hub.Clients.All.SendAsync("notifyConsole", string.Format("Wave {0} starting now", _game.wave + 1));
                     _game.wave++;
                     _game.leftToSpawn = 5 + (_game.wave * 3);
                     for (int j = 0; j < _game.leftToSpawn; j++)
