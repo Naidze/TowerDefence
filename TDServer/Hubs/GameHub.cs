@@ -75,5 +75,10 @@ namespace TDServer.Hubs
             _towerManager.SellTower(name, towerId);
 
         }
+
+        public void NotifyConsole(string formattedMessage)
+        {
+            Clients.Caller.SendAsync("notifyConsole", formattedMessage);
+        }
     }
 }

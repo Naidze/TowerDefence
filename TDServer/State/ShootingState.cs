@@ -18,7 +18,12 @@ namespace TDServer.State
             if (tower.Target.Health <= 0)
             {
                 player.Money += tower.Target.Reward;
-                player.Minions.Remove(tower.Target);
+                player.Score++;
+                if(player.Score % 50 == 0)
+                {
+                    player.NotifyConsole(string.Format("Player {0} hit {1} score!", player.Name, player.Score));
+                }
+;                player.Minions.Remove(tower.Target);
             }
 
             return true;

@@ -18,6 +18,7 @@ canvas {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    min-height: 6rem;
 }
 
 .PlayerSpace__GameMenu__Tower {
@@ -26,4 +27,20 @@ canvas {
 
 .PlayerSpace__GameMenu__Tower img {
     cursor: pointer;
+}
+
+.OtherPlayer {
+    display: flex;
+    flex-direction: column;
+}
+
+.Console {
+    border: 1px solid black;
+    background: #C0C0C0;
+}
+
+#console-messages {
+    margin: 0;
+    height: 5.9rem;
+    overflow-y: auto;
 }

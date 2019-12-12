@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,16 +20,24 @@ namespace TDServer.Models
         public string Name { get; set; }
         public int Health { get; set; }
         public int Money { get; set; }
-        public List<Minions.Minion> Minions { get; set; }
+        public List<Minion> Minions { get; set; }
         public TowerCollection Towers { get; set; }
+        public int Score { get; set; }
+        private readonly Game Game;
 
-        public Player(string id)
+        public Player(string id, Game game)
         {
             Id = id;
             Health = STARTING_HEALTH;
             Money = STARTING_MONEY;
-            Minions = new List<Minions.Minion>();
+            Minions = new List<Minion>();
             Towers = new TowerCollection();
+            Game = game;
+        }
+
+        public void NotifyConsole(string formattedMessage)
+        {
+            Game.Hub.Clients.All.SendAsync("notifyConsole", formattedMessage);
         }
     }
 }

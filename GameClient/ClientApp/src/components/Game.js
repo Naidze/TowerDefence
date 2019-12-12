@@ -43,6 +43,7 @@ export class Game extends Component {
       placeable: undefined,
       mouseX: 0,
       mouseY: 0,
+      consoleMessages: []
     }
 
     this.selectTower = this.selectTower.bind(this);
@@ -100,6 +101,18 @@ export class Game extends Component {
       this.state.hubConnection.on('gameStopping', () => {
         this.setState({ started: false });
       });
+
+      this.state.hubConnection.on('notifyConsole', formattedMessage => {
+        this.setState({
+          consoleMessages: [
+            ...this.state.consoleMessages,
+            formattedMessage
+          ]
+        }, () => {
+          var objDiv = document.getElementById('console-messages');
+          objDiv.scrollTop = objDiv.scrollHeight;
+        });
+      })
 
       this.state.hubConnection.on('tick', (wave, gameState, minionsHolder) => {
         this.setState({ wave, minions: minionsHolder['minionsList'] });
@@ -233,6 +246,10 @@ export class Game extends Component {
       <Tower name={type} click={this.selectTower} key={type} />
     );
 
+    const messages = this.state.consoleMessages.map(message => (
+      <li>{message}</li>
+    ));
+
     return (
 
       <div>
@@ -242,7 +259,7 @@ export class Game extends Component {
             <h1 className="mb-1">Wave {this.state.wave}</h1>
             <div className="canvases">
               <div className="PlayerSpace">
-                <p>{this.player.health}❤️   {this.player.money}💰</p>
+                <p>{this.player.health}❤️   {this.player.money}💰   {this.player.score}🏆</p>
                 <canvas onClick={this.handleCanvasClick} onMouseMove={this.handleCanvasMouseMove} onMouseLeave={this.handleCanvasMouseLeave} className="playerCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
                 <div className="PlayerSpace__GameMenu">
                   {this.state.upgradingTower ?
@@ -250,12 +267,17 @@ export class Game extends Component {
                     : towers}
                 </div>
               </div>
-              <div>
+              <div className="OtherPlayer">
                 <p>{this.opponent.health}❤️</p>
                 <canvas className="opponentCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
+                <div className="Console">
+                  <ul id="console-messages">
+                    {messages}
+                  </ul>
+                </div>
               </div>
             </div>
-            {this.state.minions && 
+            {this.state.minions &&
               <div>
                 {this.state.minions.minionComponents.map(group => {
                   return (

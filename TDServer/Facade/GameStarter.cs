@@ -33,7 +33,7 @@ namespace TDServer.Facade
             {
                 if (_game.players[i] == null)
                 {
-                    _game.players[i] = new Player(connectionId);
+                    _game.players[i] = new Player(connectionId, _game);
                     logger.LogMessage(LogLevel.INFO, "Player " + (i + 1) + " has joined, id: " + connectionId);
                     added = true;
                     break;

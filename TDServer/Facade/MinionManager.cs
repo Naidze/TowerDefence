@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -49,6 +50,7 @@ namespace TDServer.Facade
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(GameUtils.WAVE_INTERVAL);
+                    _game.Hub.Clients.All.SendAsync("notifyConsole", string.Format("Wave {0} starting now", _game.wave));
                     _game.wave++;
                     _game.leftToSpawn = 5 + (_game.wave * 3);
                     for (int j = 0; j < _game.leftToSpawn; j++)
@@ -73,7 +75,8 @@ namespace TDServer.Facade
             }
             else if (_game.leftToSpawn > 0 && _game.ticksBeforeSpawn-- == 0)
             {
-                SpawnMinion(minions.Dequeue());
+                if (minions.Count > 0)
+                    SpawnMinion(minions.Dequeue());
                 _game.ticksBeforeSpawn = GameUtils.SPAWN_EVERY_X_TICK;
             }
         }

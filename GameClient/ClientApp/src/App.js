@@ -13,7 +13,7 @@ export default class App extends Component {
     // const context = canvas.getContext('2d');
     // const minionFactory = new MinionFactory();
     // var iterations = 100000;
-    // console.log(window.performance.memory)
+    // console.l  og(window.performance.memory)
 
     // console.time('Flyweight');
     // for(var i = 0; i < iterations; i++ ){
