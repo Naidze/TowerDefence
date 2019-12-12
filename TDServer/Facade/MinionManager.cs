@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TDServer.Adapter;
+using TDServer.Composite;
+using TDServer.Enums;
 using TDServer.Helpers;
 using TDServer.Models.Minions;
 
@@ -14,34 +16,70 @@ namespace TDServer.Facade
         private readonly Game _game;
         private readonly Random _random;
 
+        private readonly Queue<Minion> minions = new Queue<Minion>();
+
+        private readonly MinionComponent allMinions = new MinionViewGroup("Attackers");
+        private readonly MinionComponent slowMinions = new MinionViewGroup("Slow Minions");
+        private readonly MinionComponent fastMinions = new MinionViewGroup("Fast Minions");
+        private readonly MinionComponent crawlers = new MinionViewGroup("Cralwers");
+        private readonly MinionComponent noobs = new MinionViewGroup("Noobs");
+        private readonly MinionComponent lizards = new MinionViewGroup("Lizards");
+        public MinionsHolder holder;
+
         public MinionManager(Game game)
         {
             _game = game;
             _random = new Random();
+            holder = new MinionsHolder(allMinions);
+            allMinions.Add(slowMinions);
+            allMinions.Add(fastMinions);
+            fastMinions.Add(crawlers);
+            slowMinions.Add(noobs);
+            slowMinions.Add(lizards);
         }
 
         public void SpawnMinions()
         {
             if (_game.leftToSpawn == 0)
             {
+                (noobs as MinionViewGroup).MinionComponents.Clear();
+                (crawlers as MinionViewGroup).MinionComponents.Clear();
+                (lizards as MinionViewGroup).MinionComponents.Clear();
                 _game.leftToSpawn = -1;
                 Task.Factory.StartNew(() =>
                 {
                     Thread.Sleep(GameUtils.WAVE_INTERVAL);
                     _game.wave++;
                     _game.leftToSpawn = 5 + (_game.wave * 3);
+                    for (int j = 0; j < _game.leftToSpawn; j++)
+                    {
+                        var min = GetMinionToSpawn();
+                        minions.Enqueue(min);
+                        if (min is Noob)
+                        {
+                            noobs.Add(new MinionView("NOOB"));
+                        }
+                        if (min is Lizard)
+                        {
+                            lizards.Add(new MinionView("LIZARD"));
+                        }
+                        if (min is Crawler)
+                        {
+                            crawlers.Add(new MinionView("CRAWLER"));
+                        }
+                    }
+                    //_game.leftToSpawn = 0;
                 });
             }
             else if (_game.leftToSpawn > 0 && _game.ticksBeforeSpawn-- == 0)
             {
-                SpawnMinion();
+                SpawnMinion(minions.Dequeue());
                 _game.ticksBeforeSpawn = GameUtils.SPAWN_EVERY_X_TICK;
             }
         }
 
-        private void SpawnMinion()
+        private void SpawnMinion(Minion minion)
         {
-            Minion minion = GetMinionToSpawn();
             _game.leftToSpawn--;
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
             {
@@ -76,16 +114,16 @@ namespace TDServer.Facade
             int pct = _random.Next(1, 11);
             if (pct > 8 && _game.wave >= 8)
             {
-                return _game.unitFactory.CreateMinion(Enums.MinionType.LIZARD);
+                return _game.unitFactory.CreateMinion(MinionType.LIZARD);
 
             }
             else if (pct > 6 && _game.wave >= 3)
             {
-                return _game.unitFactory.CreateMinion(Enums.MinionType.CRAWLER);
+                return _game.unitFactory.CreateMinion(MinionType.CRAWLER);
             }
             else
             {
-                return _game.unitFactory.CreateMinion(Enums.MinionType.NOOB);
+                return _game.unitFactory.CreateMinion(MinionType.NOOB);
             }
         }
     }

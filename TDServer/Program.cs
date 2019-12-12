@@ -3,10 +3,11 @@
 
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using TDServer.Composite;
 
 namespace TDServer
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

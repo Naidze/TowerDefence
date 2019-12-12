@@ -24,7 +24,7 @@ namespace TDServer.Facade
             _minionManager.SpawnMinions();
             _minionManager.MoveMinions();
             _towerManager.TowersAction();
-            _game.Hub.Clients.All.SendAsync("tick", _game.wave, _game.players);
+            _game.Hub.Clients.All.SendAsync("tick", _game.wave, _game.players, _minionManager.holder);
         }
     }
 }
