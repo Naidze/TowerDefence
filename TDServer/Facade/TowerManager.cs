@@ -6,6 +6,7 @@ using TDServer.Decorator;
 using TDServer.Enums;
 using TDServer.Helpers;
 using TDServer.Iterator;
+using TDServer.Memento;
 using TDServer.Models;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
@@ -33,15 +34,14 @@ namespace TDServer.Facade
 
             Enum.TryParse(towerName.ToUpper(), out TowerType type);
             Tower tower = _game.unitFactory.CreateTower(type, new Position(x, y));
-            //EnemyAttacker attacker = new HighDamage(new HighRate(new LongRange(tower)));
             EnemyAttacker attacker = new HighRateConveyor().BuildTower(new Position(x, y));
 
             if (player.Money < tower.Price)
             {
                 return;
             }
-            //player.Money -= attacker.Price;
-            //player.Towers.Add(attacker);
+
+            player.Caretaker.Add(player.Originator.SaveState(player.Money, player.Towers));
             player.Money -= tower.Price;
             int towerCount = player.Towers.Count;
             player.Towers[towerCount] = tower;
@@ -141,6 +141,19 @@ namespace TDServer.Facade
             }
 
             player.Towers.Remove(tower);
+        }
+
+        public void UndoTower(string name)
+        {
+            Player player = _game.GetPlayer(name);
+            if (player == null)
+            {
+                return;
+            }
+
+            PlayerMemento memento = player.Caretaker.Restore();
+            player.Money = memento.GetMoney();
+            player.Towers = memento.GetTowers();
         }
 
         private EnemyAttacker GetTower(Player player, int towerId)

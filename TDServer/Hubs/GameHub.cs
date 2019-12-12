@@ -73,7 +73,11 @@ namespace TDServer.Hubs
         public void SellTower(string name, string towerId)
         {
             _towerManager.SellTower(name, towerId);
+        }
 
+        public void UndoTower(string name)
+        {
+            _towerManager.UndoTower(name);
         }
 
         public void NotifyConsole(string formattedMessage)

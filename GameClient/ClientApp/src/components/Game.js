@@ -51,6 +51,7 @@ export class Game extends Component {
     this.handleCanvasMouseLeave = this.handleCanvasMouseLeave.bind(this);
     this.handleCanvasClick = this.handleCanvasClick.bind(this);
     this.changeAttackMode = this.changeAttackMode.bind(this);
+    this.handleUndoClick = this.handleUndoClick.bind(this);
     this.upgrade = this.upgrade.bind(this);
     this.sell = this.sell.bind(this);
   }
@@ -241,6 +242,12 @@ export class Game extends Component {
     this.setState({ upgradingTower: undefined });
   }
 
+  handleUndoClick() {
+    this.state.hubConnection
+    .invoke('undoTower', this.name)
+    .catch(err => console.error(err));
+  }
+
   render() {
     var towers = this.towerTypes.map(type =>
       <Tower name={type} click={this.selectTower} key={type} />
@@ -264,7 +271,12 @@ export class Game extends Component {
                 <div className="PlayerSpace__GameMenu">
                   {this.state.upgradingTower ?
                     <TowerUpgrades tower={this.state.upgradingTower} changeAttackMode={this.changeAttackMode} upgrade={this.upgrade} sell={this.sell} />
-                    : towers}
+                    : 
+                    <React.Fragment>
+                      {towers}
+                      <img onClick={this.handleUndoClick} className="PlayerSpace__GameMenu__Undo" src={process.env.PUBLIC_URL + '/images/undo.png'} alt=""/> 
+                    </React.Fragment>
+                  }
                 </div>
               </div>
               <div className="OtherPlayer">

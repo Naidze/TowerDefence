@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDServer.Composite;
 using TDServer.Iterator;
+using TDServer.Memento;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
 
@@ -24,6 +25,8 @@ namespace TDServer.Models
         public TowerCollection Towers { get; set; }
         public int Score { get; set; }
         private readonly Game Game;
+        public Caretaker Caretaker { get; }
+        public Originator Originator { get; }
 
         public Player(string id, Game game)
         {
@@ -32,6 +35,8 @@ namespace TDServer.Models
             Money = STARTING_MONEY;
             Minions = new List<Minion>();
             Towers = new TowerCollection();
+            Caretaker = new Caretaker();
+            Originator = new Originator(this);
             Game = game;
         }
 

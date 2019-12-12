@@ -21,6 +21,13 @@ canvas {
     min-height: 6rem;
 }
 
+.PlayerSpace__GameMenu__Undo {
+    margin-left: auto;
+    margin-right: 8px;
+    width: 32px;
+    cursor: pointer;
+}
+
 .PlayerSpace__GameMenu__Tower {
     margin-left: 12px;
 }
