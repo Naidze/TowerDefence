@@ -41,7 +41,7 @@ namespace TDServer.Facade
                 return;
             }
 
-            player.Caretaker.Add(player.Originator.SaveState(player.Money, player.Towers));
+            player.Caretaker.Add(player.Originator.SaveState(tower.Price, ObjectCopier.Clone(player.Towers)));
             player.Money -= tower.Price;
             int towerCount = player.Towers.Count;
             player.Towers[towerCount] = tower;
@@ -151,9 +151,13 @@ namespace TDServer.Facade
                 return;
             }
 
+            if (player.Caretaker.Size() == 0)
+            {
+                return;
+            }
+
             PlayerMemento memento = player.Caretaker.Restore();
-            player.Money = memento.GetMoney();
-            player.Towers = memento.GetTowers();
+            player.Originator.RestoreState(memento);
         }
 
         private EnemyAttacker GetTower(Player player, int towerId)

@@ -9,6 +9,7 @@ using TDServer.Strategy;
 
 namespace TDServer.Models.Towers
 {
+    [Serializable]
     public abstract class EnemyAttacker
     {
         protected static int idCounter = 0;

@@ -6,6 +6,7 @@ using TDServer.Strategy;
 
 namespace TDServer.Models.Towers
 {
+    [Serializable]
     public class Tower : EnemyAttacker, ICloneable
     {
         public Tower(Position position)

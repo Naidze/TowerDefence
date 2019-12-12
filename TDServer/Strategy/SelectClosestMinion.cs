@@ -8,6 +8,7 @@ using TDServer.Models.Towers;
 
 namespace TDServer.Strategy
 {
+    [Serializable]
     public class SelectClosestMinion : ISelectMinion
     {
 

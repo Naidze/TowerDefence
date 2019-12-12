@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TDServer.Helpers;
 using TDServer.Models.Minions;
 using TDServer.Models.Towers;
 
 namespace TDServer.Strategy
 {
+    [Serializable]
     public class SelectWeakestMinion : ISelectMinion
     {
         public string Name => "weakest";

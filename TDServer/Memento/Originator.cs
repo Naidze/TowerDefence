@@ -20,13 +20,13 @@ namespace TDServer.Memento
 
         public void RestoreState(PlayerMemento memento)
         {
-            _player.Money = memento.GetMoney();
+            _player.Money += memento.GetPrice();
             _player.Towers = memento.GetTowers();
         }
 
-        public PlayerMemento SaveState(int money, TowerCollection towers)
+        public PlayerMemento SaveState(int price, TowerCollection towers)
         {
-            return new PlayerMemento(money, towers);
+            return new PlayerMemento(price, towers);
         }
 
 

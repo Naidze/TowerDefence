@@ -8,9 +8,9 @@ using TDServer.Models.Towers;
 
 namespace TDServer.State
 {
+    [Serializable]
     public class ObservingState : TowerActionState
     {
-
         public override bool ActionOperation(EnemyAttacker tower, Player player)
         {
             Minion minion = tower.AttackMode.SelectEnemy(tower, player.Minions);

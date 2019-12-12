@@ -8,6 +8,7 @@ using TDServer.Helpers;
 
 namespace TDServer.Models.Minions
 {
+    [Serializable]
     public class Lizard : Minion
     {
         public Lizard() : base("lizard", 50, 1, 25)

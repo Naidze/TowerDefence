@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace TDServer.Models
 {
+    [Serializable]
     public class Position : ICloneable
     {
         public int X { get; set; }

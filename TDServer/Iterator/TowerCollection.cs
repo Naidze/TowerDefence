@@ -7,6 +7,7 @@ using TDServer.Models.Towers;
 
 namespace TDServer.Iterator
 {
+    [Serializable]
     public class TowerCollection : ITowerCollection
     {
         public ITowerIterator CreateIterator()
@@ -41,5 +42,6 @@ namespace TDServer.Iterator
         {
             Towers.Remove(tower);
         }
+
     }
 }

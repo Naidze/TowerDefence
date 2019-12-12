@@ -8,6 +8,7 @@ using TDServer.Helpers;
 
 namespace TDServer.Models.Minions
 {
+    [Serializable]
     public abstract class Minion : ICloneable
     {
 

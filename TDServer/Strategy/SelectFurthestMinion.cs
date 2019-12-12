@@ -8,10 +8,9 @@ using TDServer.Models.Towers;
 
 namespace TDServer.Strategy
 {
+    [Serializable]
     public class SelectFurthestMinion : ISelectMinion
     {
-
-
         public string Name => "furthest";
 
         public Minion SelectEnemy(EnemyAttacker tower, List<Minion> minions)

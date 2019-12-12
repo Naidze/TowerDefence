@@ -7,6 +7,7 @@ using TDServer.Models.Towers;
 
 namespace TDServer.State
 {
+    [Serializable]
     public class TowerAction
     {
         public TowerActionState currentState { get; set; }

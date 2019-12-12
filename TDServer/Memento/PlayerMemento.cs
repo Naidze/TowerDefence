@@ -9,18 +9,18 @@ namespace TDServer.Memento
     public class PlayerMemento
     {
 
-        private readonly int money;
+        private readonly int price;
         private readonly TowerCollection towers;
 
-        public PlayerMemento(int money, TowerCollection towers)
+        public PlayerMemento(int price, TowerCollection towers)
         {
-            this.money = money;
+            this.price = price;
             this.towers = towers;
         }
 
-        public int GetMoney()
+        public int GetPrice()
         {
-            return money;
+            return price;
         }
 
         public TowerCollection GetTowers()
