@@ -14,7 +14,6 @@ namespace TDServer.Models.Towers
             Position = position;
             AttackMode = new SelectClosestMinion();
             Upgrades = new Dictionary<string, int>();
-            TicksBeforeShot = 0;
         }
 
         public object Clone()

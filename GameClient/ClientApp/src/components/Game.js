@@ -102,11 +102,7 @@ export class Game extends Component {
       });
 
       this.state.hubConnection.on('tick', (wave, gameState, minionsHolder) => {
-        this.setState({ wave });
-        const noobs = minionsHolder['minionsList'].minionComponents[0].minionComponents[0];
-        const lizards = minionsHolder['minionsList'].minionComponents[0].minionComponents[1];
-        const crawlers = minionsHolder['minionsList'].minionComponents[1].minionComponents[0];
-        console.log(noobs, lizards, crawlers);
+        this.setState({ wave, minions: minionsHolder['minionsList'] });
         this.player = gameState.filter(user => user.id === this.id)[0];
         this.opponent = gameState.filter(user => user.id !== this.id)[0];
         if (this.player && this.opponent) {
@@ -238,6 +234,7 @@ export class Game extends Component {
     );
 
     return (
+
       <div>
         {!this.state.started && <h1 className="mb-1">Waiting for players..</h1>}
         {this.state.started &&
@@ -258,6 +255,22 @@ export class Game extends Component {
                 <canvas className="opponentCanvas" width="600" height="400" style={{ border: '1px solid #000000' }}></canvas>
               </div>
             </div>
+            {this.state.minions && 
+              <div>
+                {this.state.minions.minionComponents.map(group => {
+                  return (
+                    <p key={group.groupName}>
+                      <b>{group.groupName} </b>
+                      {group.minionComponents.map(minion => {
+                        return (
+                          <span key={minion.groupName}>{minion.groupName}: {minion.minionComponents.length} </span>
+                        )
+                      })}
+                    </p>
+                  )
+                })}
+              </div>
+            }
           </div>
         }
       </div>

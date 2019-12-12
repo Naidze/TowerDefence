@@ -21,8 +21,8 @@ namespace GameClient.Decorator
             Price = attacker.Price;
             AttackMode = attacker.AttackMode;
             Upgrades = attacker.Upgrades;
-            TicksBeforeShot = attacker.TicksBeforeShot;
             TowerAction = attacker.TowerAction;
+            Target = attacker.Target;
             _attacker = attacker;
         }
     }

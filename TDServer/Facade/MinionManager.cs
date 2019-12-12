@@ -21,7 +21,7 @@ namespace TDServer.Facade
         private readonly MinionComponent allMinions = new MinionViewGroup("Attackers");
         private readonly MinionComponent slowMinions = new MinionViewGroup("Slow Minions");
         private readonly MinionComponent fastMinions = new MinionViewGroup("Fast Minions");
-        private readonly MinionComponent crawlers = new MinionViewGroup("Cralwers");
+        private readonly MinionComponent crawlers = new MinionViewGroup("Crawlers");
         private readonly MinionComponent noobs = new MinionViewGroup("Noobs");
         private readonly MinionComponent lizards = new MinionViewGroup("Lizards");
         public MinionsHolder holder;
