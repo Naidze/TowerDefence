@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React, { Component } from 'react';
 import { HubConnectionBuilder } from '@aspnet/signalr';
-import MinionHandler from '../MinionHandler';
 import TowerHandler from '../TowerHandler';
 import { distance, distanceToLineSegment } from '../utils';
 import Tower from './Tower';
@@ -14,7 +13,6 @@ export class Game extends Component {
   minRoadDistance = 25;
 
   towerTypes = ["soldier", "archer"];
-  minionTypes = ["noob", "lizard", "crawler"]
 
   gameMap = undefined;
 
@@ -121,7 +119,6 @@ export class Game extends Component {
     this.opponentContext = this.opponentCanvas.getContext('2d');
 
     this.minionFactory = new MinionFactory();
-    this.minionHandler = new MinionHandler(this.minionTypes);
     this.towerHandler = new TowerHandler(this.towerTypes);
   }
 

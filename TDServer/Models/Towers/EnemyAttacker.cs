@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TDServer.Models.Minions;
+using TDServer.State;
 using TDServer.Strategy;
 
 namespace TDServer.Models.Towers
@@ -21,6 +23,8 @@ namespace TDServer.Models.Towers
         public int Rate { get; set; }
         public int Price { get; set; }
         public int TicksBeforeShot { get; set; }
+        public TowerAction TowerAction { get; set; }
+        public Minion Target { get; set; }
 
         public override bool Equals(object obj)
         {

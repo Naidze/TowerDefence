@@ -47,36 +47,15 @@ namespace TDServer.Facade
             player.Towers[towerCount] = tower;
         }
 
-        public void FireTowers()
+        public void TowersAction()
         {
             for (int i = 0; i < GameUtils.PLAYER_COUNT; i++)
             {
                 ITowerIterator iterator = _game.players[i].Towers.CreateIterator();
                 for (EnemyAttacker tower = iterator.First(); !iterator.IsDone; tower = iterator.Next())
                 {
-                    if (tower.TicksBeforeShot-- > 0)
-                    {
-                        continue;
-                    }
-
-                    Minion minion = tower.AttackMode.SelectEnemy(tower, _game.players[i].Minions);
-                    if (minion == null)
-                    {
-                        continue;
-                    }
-                    DamageMinion(_game.players[i], tower, minion);
+                    tower.TowerAction.Action(tower, _game.players[i]);
                 }
-            }
-        }
-
-        private void DamageMinion(Player player, EnemyAttacker tower, Minion minion)
-        {
-            tower.TicksBeforeShot = GameUtils.SHOOT_EVERY_X_TICK / tower.Rate;
-            minion.Health -= tower.Damage;
-            if (minion.Health <= 0)
-            {
-                player.Money += minion.Reward;
-                player.Minions.Remove(minion);
             }
         }
 

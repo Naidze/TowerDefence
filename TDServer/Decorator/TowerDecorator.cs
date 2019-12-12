@@ -22,6 +22,7 @@ namespace GameClient.Decorator
             AttackMode = attacker.AttackMode;
             Upgrades = attacker.Upgrades;
             TicksBeforeShot = attacker.TicksBeforeShot;
+            TowerAction = attacker.TowerAction;
             _attacker = attacker;
         }
     }

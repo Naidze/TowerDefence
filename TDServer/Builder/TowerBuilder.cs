@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TDServer.Models;
 using TDServer.Models.Towers;
+using TDServer.State;
 
 namespace TDServer.Builder
 {
@@ -59,7 +60,8 @@ namespace TDServer.Builder
                 Damage = Damage,
                 Range = Range,
                 Rate = Rate,
-                Price = Price
+                Price = Price,
+                TowerAction = new TowerAction()
             };
         }
 
