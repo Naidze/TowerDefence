@@ -246,8 +246,8 @@ export class Game extends Component {
       <Tower name={type} click={this.selectTower} key={type} />
     );
 
-    const messages = this.state.consoleMessages.map(message => (
-      <li>{message}</li>
+    const messages = this.state.consoleMessages.map((message, id) => (
+      <li key={id}>{message}</li>
     ));
 
     return (
